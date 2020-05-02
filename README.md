@@ -18,6 +18,7 @@ Business Endpoints:
 
 - [Business Search](#business-search)
 - [Business Details](#business-details)
+- [Business Phone Search](#business-phone-search)
 
 <br/>
 
@@ -86,10 +87,10 @@ func main() {
 		return
 	}
 
-	katsuyaID := "saijdv-vXJrvsCfvr7SZOw"
+	businessId := "saijdv-vXJrvsCfvr7SZOw"
 	canadaLocale := "en_CA"
 
-	res, err := client.BusinessDetails(katsuyaID, canadaLocale)
+	res, err := client.BusinessDetails(businessId, canadaLocale)
 
 	if err != nil {
 		fmt.Printf("Oh noes, error: %v", err)
@@ -104,6 +105,38 @@ func main() {
 	fmt.Printf("Phone number: %v\n", res.Phone)
 	fmt.Printf("Photos: %v", res.Photos)
 }
+```
+
+## Business Phone Search
+
+For more details on request/response payloads, refer to https://www.yelp.ca/developers/documentation/v3/business_search_phone
+
+```go
+import (
+	"fmt"
+	"github.com/naguigui/yelp-fusion/yelp"
+	"os"
+)
+
+func main() {
+	// Create client using access token from environment variables
+	client, err := yelp.Init(os.Getenv("YELP_API_KEY"))
+
+	if err != nil {
+		fmt.Printf("Oh noes, error: %v\n", err)
+		return
+	}
+
+	phoneNumber := "+1somephonenumber"
+
+	res, err := client.BusinessPhoneSearch(phoneNumber, "")
+	if err != nil {
+		fmt.Printf("Oh noes, error: %v", err)
+		return
+	}
+	fmt.Printf("res: %v\n", res)
+}
+
 ```
 
 ### License
