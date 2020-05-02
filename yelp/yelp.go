@@ -12,6 +12,7 @@ import (
 const (
 	baseURI            = "https://api.yelp.com/v3"
 	businessesEndpoint = "/businesses/search"
+	businessDetailEndpoint = "/businesses/"
 )
 
 type Client struct {
@@ -21,14 +22,14 @@ type Client struct {
 // Init creates a new Yelp client to interface with Yelp API
 func Init(accessToken string) (*Client, error) {
 	if accessToken == "" {
-		return nil, fmt.Errorf("access token not provided")
+		return nil, errors.New("access token is required but not provided")
 	}
 
 	return &Client{AccessToken: accessToken}, nil
 
 }
 
-// BusinessSearch dispatches a request to the Yelp Business API
+// BusinessSearch dispatches a request to the Yelp Business Search API
 func (c *Client) BusinessSearch(business BusinessSearch) (res *BusinessSearchResponse, err error) {
 	params, err := utility.StructToMap(business)
 
@@ -55,7 +56,7 @@ func (c *Client) BusinessSearch(business BusinessSearch) (res *BusinessSearchRes
 		}
 	}
 
-	_, err = c.dispatchRequest(businessesEndpoint, "", filteredParams, &res)
+	err = c.dispatchRequest(businessesEndpoint, filteredParams, &res)
 
 	if err != nil {
 		return &BusinessSearchResponse{}, err
@@ -64,11 +65,33 @@ func (c *Client) BusinessSearch(business BusinessSearch) (res *BusinessSearchRes
 	return res, nil
 }
 
+// BusinessDetail dispatches a request to the Yelp Business Detail API
+func (c *Client) BusinessDetails(id string, locale string) (res *BusinessDetailsResponse, err error) {
+	params := make(map[string]interface{})
+
+	if locale == "" {
+		params["locale"] = locale
+	}
+
+	if id == "" {
+		return &BusinessDetailsResponse{}, errors.New("id is required")
+	}
+
+	err = c.dispatchRequest(fmt.Sprintf("%s%s", businessDetailEndpoint, id), params, &res)
+
+	if err != nil {
+		return &BusinessDetailsResponse{}, err
+	}
+
+	return res, nil
+
+}
+
 // dispatchRequest formats request and dispatches it to Yelp API
-func (c *Client) dispatchRequest(endpoint string, id string, params map[string]interface{}, v interface{}) (statusCode int, err error) {
+func (c *Client) dispatchRequest(endpoint string, params map[string]interface{}, payload interface{}) error {
 
 	httpClient := &http.Client{}
-	req, err := http.NewRequest("GET", fmt.Sprintf("%s%s", baseURI, endpoint), nil)
+	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("%s%s", baseURI, endpoint), nil)
 
 	q := req.URL.Query()
 
@@ -84,25 +107,24 @@ func (c *Client) dispatchRequest(endpoint string, id string, params map[string]i
 	defer res.Body.Close()
 
 	if err != nil {
-		return http.StatusInternalServerError, err
+		return err
 	}
 
-	// ensure the request returned a 200
-	if res.StatusCode != 200 {
-		return res.StatusCode, errors.New(res.Status)
+	if res.StatusCode != http.StatusOK {
+		return errors.New(res.Status)
 	}
 
 	data, err := ioutil.ReadAll(res.Body)
 
 	if err != nil {
-		return http.StatusInternalServerError, err
+		return err
 	}
 
-	err = json.Unmarshal(data, &v)
+	err = json.Unmarshal(data, &payload)
 
 	if err != nil {
-		return http.StatusInternalServerError, err
+		return err
 	}
 
-	return res.StatusCode, err
+	return err
 }
