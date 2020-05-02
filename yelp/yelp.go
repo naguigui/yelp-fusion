@@ -13,6 +13,7 @@ const (
 	baseURI                = "https://api.yelp.com/v3"
 	businessesEndpoint     = "/businesses/search"
 	businessDetailEndpoint = "/businesses/"
+	businessSearchPhoneEndpoint = "/businesses/search/phone"
 )
 
 type Client struct {
@@ -57,39 +58,52 @@ func (c *Client) BusinessSearch(business BusinessSearch) (res *BusinessSearchRes
 	}
 
 	err = c.dispatchRequest(businessesEndpoint, filteredParams, &res)
-
 	if err != nil {
 		return &BusinessSearchResponse{}, err
 	}
-
 	return res, nil
 }
 
 // BusinessDetails dispatches a request to the Yelp Business Detail API
 func (c *Client) BusinessDetails(id string, locale string) (res *BusinessDetailsResponse, err error) {
-	params := make(map[string]interface{})
-
-	if locale == "" {
-		params["locale"] = locale
-	}
-
 	if id == "" {
 		return &BusinessDetailsResponse{}, errors.New("id is required")
 	}
 
-	err = c.dispatchRequest(fmt.Sprintf("%s%s", businessDetailEndpoint, id), params, &res)
+	params := make(map[string]interface{})
 
+	if locale != "" {
+		params["locale"] = locale
+	}
+
+	err = c.dispatchRequest(fmt.Sprintf("%s%s", businessDetailEndpoint, id), params, &res)
 	if err != nil {
 		return &BusinessDetailsResponse{}, err
 	}
-
 	return res, nil
+}
 
+// BusinessPhoneSearch dispatches a request to the Yelp Phone Search API
+func (c *Client) BusinessPhoneSearch(phoneNumber string, locale string) (res *BusinessPhoneSearchResponse, err error) {
+	if phoneNumber == "" {
+		return &BusinessPhoneSearchResponse{}, errors.New("phone number is required")
+	}
+
+	params := make(map[string]interface{})
+
+	if locale != "" {
+		params["locale"] = locale
+	}
+
+	err = c.dispatchRequest(fmt.Sprintf("%s%s", businessSearchPhoneEndpoint, phoneNumber), params, &res)
+	if err != nil {
+		return &BusinessPhoneSearchResponse{}, err
+	}
+	return res, nil
 }
 
 // dispatchRequest formats request and dispatches it to Yelp API
 func (c *Client) dispatchRequest(endpoint string, params map[string]interface{}, payload interface{}) error {
-
 	httpClient := &http.Client{}
 	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("%s%s", baseURI, endpoint), nil)
 
@@ -115,13 +129,11 @@ func (c *Client) dispatchRequest(endpoint string, params map[string]interface{},
 	}
 
 	data, err := ioutil.ReadAll(res.Body)
-
 	if err != nil {
 		return err
 	}
 
 	err = json.Unmarshal(data, &payload)
-
 	if err != nil {
 		return err
 	}

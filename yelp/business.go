@@ -46,6 +46,11 @@ type BusinessDetailsResponse struct {
 	Messaging    Messaging               `json:"messaging"`     // Contains Business Messaging / Request a Quote information for this business. This field only appears in the response for businesses that have messaging enabled
 }
 
+type BusinessPhoneSearchResponse struct {
+	Total int `json:"total`
+	Businesses []Business
+}
+
 type Business struct {
 	ID           string      `json:"id"`           // Unique Yelp ID of this business
 	Rating       float32     `json:"rating"`       // Rating for this business (value ranges from 1, 1.5, ... 4.5, 5)
@@ -60,7 +65,7 @@ type Business struct {
 	Coordinates  Coordinates `json:"coordinates"`  // Coordinates of this business
 	ImageURL     string      `json:"image_url"`    // URL of photo for this business
 	Location     Location    `json:"location"`     // Location of this business, including address, city, state, zip code, and country
-	Distance     float32     `json:"distance"`     // Distance in meters from the search location
+	Distance     float32     `json:"distance,omitempty"` // Distance in meters from the search location
 	Transactions []string    `json:"transactions"` // List of Yelp transactions that the business is registered for. Current supported values are pickup, delivery, and restaurant_reservation
 }
 
@@ -89,7 +94,7 @@ type Location struct {
 }
 
 type LocationBusinessDetails struct {
-	*Location
+	Location
 	DisplayAddress []string `json:"display_address"` // Array of strings that if organized vertically give an address that is in the standard address format for the business's country
 	CrossStreets   string   `json:"cross_streets"`   // Cross streets for this business
 }
