@@ -10,8 +10,8 @@ import (
 )
 
 const (
-	baseURI            = "https://api.yelp.com/v3"
-	businessesEndpoint = "/businesses/search"
+	baseURI                = "https://api.yelp.com/v3"
+	businessesEndpoint     = "/businesses/search"
 	businessDetailEndpoint = "/businesses/"
 )
 

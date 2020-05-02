@@ -33,7 +33,7 @@ type BusinessDetailsResponse struct {
 	URL          string                  `json:"url"`           // URL for business page on Yelp
 	Phone        string                  `json:"phone"`         // Phone number of the business
 	DisplayPhone string                  `json:"display_phone"` // Phone number of the business formatted nicely to be displayed to users
-	ReviewCount  int                  `json:"review_count"`  // Number of reviews for this business
+	ReviewCount  int                     `json:"review_count"`  // Number of reviews for this business
 	Categories   []Category              `json:"categories"`    // A list of category title and alias pairs associated with this business
 	Rating       float32                 `json:"rating"`        // Rating for this business (value ranges from 1, 1.5, ... 4.5, 5)
 	Location     LocationBusinessDetails `json:"location"`      // The location of this business, including address, city, state, zip code and country
