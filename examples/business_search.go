@@ -1,32 +1,33 @@
 package main
 
 import (
-	"github.com/naguigui/yelp-fusion/yelp"
 	"fmt"
-	"os"
+	"github.com/naguigui/yelp-fusion/yelp"
 )
 
 func main() {
 	// Create client using access token from environment variables
-	client, err := yelp.Init(os.Getenv("YELP_ACCESS_TOKEN"))
+	client, err := yelp.Init(os.Getenv("YELP_API_KEY"))
 
 	if err != nil {
-		fmt.Println("Oh noes, error: %v", err)
+		fmt.Printf("Oh noes, error: %v\n", err)
+		return
 	}
 
 	// Create business search params
 	params := yelp.BusinessSearch{
-		Term: "restaurants",
+		Term:     "restaurants",
 		Location: "220 Yonge St, Toronto, ON",
-		Limit: 10,
-		Radius: 39,
+		Limit:    10,
+		Radius:   39,
 	}
 
 	// Make the request with created params
 	res, err := client.BusinessSearch(params)
 
 	if err != nil {
-		fmt.Println("Oh noes, error: %v", err)
+		fmt.Printf("Oh noes, error: %v\n", err)
+		return
 	}
 
 	for _, business := range res.Businesses {
