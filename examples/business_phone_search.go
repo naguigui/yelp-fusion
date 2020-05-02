@@ -15,7 +15,7 @@ func main() {
 		return
 	}
 
-	phoneNumber := "+14159083801"
+	phoneNumber := "+1somephonenumber"
 
 	res, err := client.BusinessPhoneSearch(phoneNumber, "")
 	if err != nil {
