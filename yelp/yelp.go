@@ -10,23 +10,29 @@ import (
 )
 
 const (
-	baseURI                = "https://api.yelp.com/v3"
-	businessesEndpoint     = "/businesses/search"
-	businessDetailEndpoint = "/businesses/"
+	baseURI                     = "https://api.yelp.com/v3"
+	businessesEndpoint          = "/businesses/search"
+	businessDetailEndpoint      = "/businesses/"
 	businessSearchPhoneEndpoint = "/businesses/search/phone"
 )
 
 type Client struct {
-	APIKey string
+	APIKey     string
+	HTTPClient *http.Client
+	BaseURI    string
 }
 
 // Init creates a new Yelp client to interface with Yelp API
-func Init(apiKey string) (*Client, error) {
+func Init(apiKey string, httpClient *http.Client) (*Client, error) {
 	if apiKey == "" {
 		return nil, errors.New("access token is required but not provided")
 	}
 
-	return &Client{APIKey: apiKey}, nil
+	if httpClient == nil {
+		httpClient = http.DefaultClient
+	}
+
+	return &Client{APIKey: apiKey, BaseURI: baseURI, HTTPClient: httpClient}, nil
 
 }
 
@@ -104,9 +110,7 @@ func (c *Client) BusinessPhoneSearch(phoneNumber string, locale string) (res *Bu
 
 // dispatchRequest formats request and dispatches it to Yelp API
 func (c *Client) dispatchRequest(endpoint string, params map[string]interface{}, payload interface{}) error {
-	httpClient := &http.Client{}
-	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("%s%s", baseURI, endpoint), nil)
-
+	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("%s%s", c.BaseURI, endpoint), nil)
 	q := req.URL.Query()
 
 	for key, val := range params {
@@ -115,8 +119,7 @@ func (c *Client) dispatchRequest(endpoint string, params map[string]interface{},
 
 	req.URL.RawQuery = q.Encode()
 	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", c.APIKey))
-
-	res, err := httpClient.Do(req)
+	res, err := c.HTTPClient.Do(req)
 
 	defer res.Body.Close()
 
