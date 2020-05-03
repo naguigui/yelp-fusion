@@ -1,0 +1,26 @@
+version: 2
+jobs:
+  test:
+    docker:
+      - image: circleci/golang:1.9
+
+    environment:
+      TEST_RESULTS: /tmp/test-results
+
+    working_directory: /go/src/github.com/naguigui/yelp-fusion
+    steps:
+      - checkout
+      - run:
+          name: "install dependencies"
+          command: |
+            go get github.com/stretchr/testify/assert
+      - run:
+          name: "run unit tests"
+          command: |
+            go vet ./yelp
+            go test ./yelp
+workflows:
+  version: 2
+  build-workflow:
+    jobs:
+      - test

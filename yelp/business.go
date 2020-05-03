@@ -47,26 +47,26 @@ type BusinessDetailsResponse struct {
 }
 
 type BusinessPhoneSearchResponse struct {
-	Total int `json:"total`
+	Total      int `json:"total"`
 	Businesses []Business
 }
 
 type Business struct {
-	ID           string      `json:"id"`           // Unique Yelp ID of this business
-	Rating       float32     `json:"rating"`       // Rating for this business (value ranges from 1, 1.5, ... 4.5, 5)
-	Price        string      `json:"price"`        // Price level of this business. Value is one of $, $$, $$$, and $$$$
-	Phone        string      `json:"phone"`        // Phone number of this business
-	Alias        string      `json:"alias"`        // Alias of a category
-	IsClosed     bool        `json:"is_closed"`    // Whether business has been (permanently) closed
-	Categories   []Category  `json:"categories"`   // List of category title and alias pairs associated with this business
-	ReviewCount  int         `json:"review_count"` // Number of reviews for this business
-	Name         string      `json:"name"`         // Name of this business
-	URL          string      `json:"url"`          // URL for business page on Yelp
-	Coordinates  Coordinates `json:"coordinates"`  // Coordinates of this business
-	ImageURL     string      `json:"image_url"`    // URL of photo for this business
-	Location     Location    `json:"location"`     // Location of this business, including address, city, state, zip code, and country
+	ID           string      `json:"id"`                 // Unique Yelp ID of this business
+	Rating       float32     `json:"rating"`             // Rating for this business (value ranges from 1, 1.5, ... 4.5, 5)
+	Price        string      `json:"price"`              // Price level of this business. Value is one of $, $$, $$$, and $$$$
+	Phone        string      `json:"phone"`              // Phone number of this business
+	Alias        string      `json:"alias"`              // Alias of a category
+	IsClosed     bool        `json:"is_closed"`          // Whether business has been (permanently) closed
+	Categories   []Category  `json:"categories"`         // List of category title and alias pairs associated with this business
+	ReviewCount  int         `json:"review_count"`       // Number of reviews for this business
+	Name         string      `json:"name"`               // Name of this business
+	URL          string      `json:"url"`                // URL for business page on Yelp
+	Coordinates  Coordinates `json:"coordinates"`        // Coordinates of this business
+	ImageURL     string      `json:"image_url"`          // URL of photo for this business
+	Location     Location    `json:"location"`           // Location of this business, including address, city, state, zip code, and country
 	Distance     float32     `json:"distance,omitempty"` // Distance in meters from the search location
-	Transactions []string    `json:"transactions"` // List of Yelp transactions that the business is registered for. Current supported values are pickup, delivery, and restaurant_reservation
+	Transactions []string    `json:"transactions"`       // List of Yelp transactions that the business is registered for. Current supported values are pickup, delivery, and restaurant_reservation
 }
 
 type Region struct {
