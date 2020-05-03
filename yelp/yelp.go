@@ -22,17 +22,22 @@ type Client struct {
 	BaseURI    string
 }
 
+type Options struct {
+	APIKey     string
+	HTTPClient *http.Client
+}
+
 // Init creates a new Yelp client to interface with Yelp API
-func Init(apiKey string, httpClient *http.Client) (*Client, error) {
-	if apiKey == "" {
+func Init(o *Options) (*Client, error) {
+	if o.APIKey == "" {
 		return nil, errors.New("access token is required but not provided")
 	}
 
-	if httpClient == nil {
-		httpClient = http.DefaultClient
+	if o.HTTPClient == nil {
+		o.HTTPClient = http.DefaultClient
 	}
 
-	return &Client{APIKey: apiKey, BaseURI: baseURI, HTTPClient: httpClient}, nil
+	return &Client{APIKey: o.APIKey, BaseURI: baseURI, HTTPClient: o.HTTPClient}, nil
 
 }
 

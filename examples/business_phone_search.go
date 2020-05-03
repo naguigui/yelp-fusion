@@ -8,7 +8,7 @@ import (
 
 func main() {
 	// Create client using access token from environment variables
-	client, err := yelp.Init(os.Getenv("YELP_API_KEY"), nil)
+	client, err := yelp.Init(&yelp.Options{APIKey: os.Getenv("YELP_API_KEY")})
 
 	if err != nil {
 		fmt.Printf("Oh noes, error: %v\n", err)
@@ -22,5 +22,6 @@ func main() {
 		fmt.Printf("Oh noes, error: %v", err)
 		return
 	}
-	fmt.Printf("res: %v\n")
+	fmt.Printf("Total businesses: %v\n", res.Total)
+	fmt.Printf("Businesses: %v\n", res.Businesses)
 }
