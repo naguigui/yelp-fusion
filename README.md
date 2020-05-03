@@ -2,6 +2,8 @@
 
 Yelp Fusion API client for Go
 
+[![CircleCI](https://circleci.com/gh/naguigui/yelp-fusion/tree/master.svg?style=svg)](https://circleci.com/gh/naguigui/yelp-fusion/tree/master)
+
 Refer to the official Yelp documentation for more information on the API: https://www.yelp.com/developers/documentation/v3 including how to authenticate to use the API.
 
 ## Installation

@@ -11,14 +11,23 @@ jobs:
     steps:
       - checkout
       - run:
-          name: "install dependencies"
+          name: "Create a temp directory for artifacts"
           command: |
-            go get github.com/stretchr/testify/assert
+            mkdir -p /tmp/artifacts
+      - run:
+          name: "install dependencies"
+          command: go get github.com/stretchr/testify/assert
+      - run:
+          name: "run vet"
+          command: go vet ./yelp
       - run:
           name: "run unit tests"
           command: |
-            go vet ./yelp
-            go test ./yelp
+            go test -coverprofile=c.out ./yelp
+            go tool cover -html=c.out -o coverage.html
+            mv coverage.html /tmp/artifacts
+      - store_artifacts:
+          path: /tmp/artifacts
 workflows:
   version: 2
   build-workflow:
