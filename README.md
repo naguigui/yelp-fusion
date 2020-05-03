@@ -35,7 +35,7 @@ For more details on request/response payloads, refer to https://www.yelp.com/dev
 
   func main() {
       // Create client using access token from environment variables
-	client, err := yelp.Init(os.Getenv("YELP_API_KEY"))
+	client, err := yelp.Init(os.Getenv("YELP_API_KEY"), nil)
 
 	if err != nil {
 		fmt.Printf("Oh noes, error: %v\n", err)
@@ -80,7 +80,7 @@ import (
 
 func main() {
 	// Create client using access token from environment variables
-	client, err := yelp.Init(os.Getenv("YELP_API_KEY"))
+	client, err := yelp.Init(os.Getenv("YELP_API_KEY"), nil)
 
 	if err != nil {
 		fmt.Printf("Oh noes, error: %v\n", err)
@@ -120,7 +120,7 @@ import (
 
 func main() {
 	// Create client using access token from environment variables
-	client, err := yelp.Init(os.Getenv("YELP_API_KEY"))
+	client, err := yelp.Init(os.Getenv("YELP_API_KEY"), nil)
 
 	if err != nil {
 		fmt.Printf("Oh noes, error: %v\n", err)
