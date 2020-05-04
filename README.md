@@ -12,6 +12,16 @@ Refer to the official Yelp documentation for more information on the API: https:
 go get github.com/naguigui/yelp-fusion
 ```
 
+## Client Init
+
+```go
+import "github.com/naguigui/yelp-fusion/yelp"
+
+func main() {
+	client, err := yelp.Init(&yelp.Options{APIKey: os.Getenv("YELP_API_KEY")})
+}
+```
+
 <br/>
 
 ## Table of Contents
@@ -31,18 +41,8 @@ Business Endpoints:
 For more details on request/response payloads, refer to https://www.yelp.com/developers/documentation/v3/business_search
 
 ```go
-  import (
-      "github.com/naguigui/yelp-fusion"
-  )
-
-  func main() {
     // Create client using access token from environment variables
 	client, err := yelp.Init(&yelp.Options{APIKey: os.Getenv("YELP_API_KEY")})
-
-	if err != nil {
-		fmt.Printf("Oh noes, error: %v\n", err)
-		return
-	}
 
 	// Create business search params
 	params := yelp.BusinessSearch{
@@ -54,11 +54,6 @@ For more details on request/response payloads, refer to https://www.yelp.com/dev
 
 	// Make the request with created params
 	res, err := client.BusinessSearch(params)
-
-	if err != nil {
-		fmt.Printf("Oh noes, error: %v\n", err)
-		return
-	}
 
 	for _, business := range res.Businesses {
 		fmt.Printf("ID: %v\n", business.ID)
@@ -74,30 +69,12 @@ For more details on request/response payloads, refer to https://www.yelp.com/dev
 For more details on request/response payloads, refer to https://www.yelp.com/developers/documentation/v3/business
 
 ```go
-import (
-	"fmt"
-	"github.com/naguigui/yelp-fusion/yelp"
-	"os"
-)
-
-func main() {
-	// Create client using access token from environment variables
 	client, err := yelp.Init(&yelp.Options{APIKey: os.Getenv("YELP_API_KEY")})
-
-	if err != nil {
-		fmt.Printf("Oh noes, error: %v\n", err)
-		return
-	}
 
 	businessId := "saijdv-vXJrvsCfvr7SZOw"
 	canadaLocale := "en_CA"
 
 	res, err := client.BusinessDetails(businessId, canadaLocale)
-
-	if err != nil {
-		fmt.Printf("Oh noes, error: %v", err)
-		return
-	}
 
 	fmt.Printf("ID: %v\n", res.ID)
 	fmt.Printf("Name: %v\n", res.Name)
@@ -106,7 +83,6 @@ func main() {
 	fmt.Printf("Address: %v\n", res.Location.DisplayAddress)
 	fmt.Printf("Phone number: %v\n", res.Phone)
 	fmt.Printf("Photos: %v", res.Photos)
-}
 ```
 
 ## Business Phone Search
@@ -114,32 +90,37 @@ func main() {
 For more details on request/response payloads, refer to https://www.yelp.ca/developers/documentation/v3/business_search_phone
 
 ```go
-import (
-	"fmt"
-	"github.com/naguigui/yelp-fusion/yelp"
-	"os"
-)
-
-func main() {
 	// Create client using access token from environment variables
-	client, err := yelp.Init(&yelp.Options{APIKey: os.Getenv("YELP_API_KEY")})
-
-	if err != nil {
-		fmt.Printf("Oh noes, error: %v\n", err)
-		return
-	}
+	client, _ := yelp.Init(&yelp.Options{APIKey: os.Getenv("YELP_API_KEY")})
 
 	phoneNumber := "+1somephonenumber"
 
-	res, err := client.BusinessPhoneSearch(phoneNumber, "")
-	if err != nil {
-		fmt.Printf("Oh noes, error: %v", err)
-		return
-	}
+	res, _ := client.BusinessPhoneSearch(phoneNumber, "")
+
 	fmt.Printf("Total businesses: %v\n", res.Total)
 	fmt.Printf("Businesses: %v\n", res.Businesses)
-}
+```
 
+## Business Reviews
+
+For more details on request/response payloads, refer to https://www.yelp.com/developers/documentation/v3/business_reviews
+
+```go
+	client, err := yelp.Init(&yelp.Options{APIKey: os.Getenv("YELP_API_KEY")})
+
+	businessID := "saijdv-vXJrvsCfvr7SZOw"
+	canadaLocale := "en_CA"
+
+	res, err := client.BusinessReviews(businessID, canadaLocale)
+
+	for k, v := range res.Reviews {
+		fmt.Println("ID:", v.ID)
+		fmt.Println("Rating:", v.Rating)
+		fmt.Println("Text:", v.Text)
+		fmt.Println("Time Created:", v.TimeCreated)
+		fmt.Println("User:", v.User)
+		fmt.Println("Url:", v.Url)
+	}
 ```
 
 ### License

@@ -1,5 +1,6 @@
 package yelp
 
+// BusinessSearch is the request payload for Business search API
 type BusinessSearch struct {
 	Term       string  `json:"term"`       // Optional. Search term, for example "food" or "restaurants". The term may also be business names, such as "Starbucks". If term is not included the endpoint will default to searching across businesses from a small number of popular categories
 	Location   string  `json:"location"`   // Required if either latitude or longitude is not provided. This string indicates the geographic area to be used when searching for businesses
@@ -17,12 +18,14 @@ type BusinessSearch struct {
 	Attributes string  `json:"attributes"` // Optional. See list of attributes to try out here. https://www.yelp.ca/developers/documentation/v3/business_search
 }
 
+// BusinessSearchResponse is the response payload for Business Search API
 type BusinessSearchResponse struct {
 	Region     Region     `json:"region"`     // Suggested area in a map to display results in.
 	Total      int        `json:"total"`      // Total number of business results
 	Businesses []Business `json:"businesses"` // The list of business entries (see Business)
 }
 
+// BusinessDetailsResponse is the response payload for Business Details API
 type BusinessDetailsResponse struct {
 	ID           string                  `json:"id"`            // Unique Yelp ID of this business
 	Alias        string                  `json:"alias"`         // Alias of a category
@@ -46,9 +49,17 @@ type BusinessDetailsResponse struct {
 	Messaging    Messaging               `json:"messaging"`     // Contains Business Messaging / Request a Quote information for this business. This field only appears in the response for businesses that have messaging enabled
 }
 
+// BusinessPhoneSearchResponse is the response payload for Business Phone Search API
 type BusinessPhoneSearchResponse struct {
-	Total      int `json:"total"`
-	Businesses []Business
+	Total      int        `json:"total"`
+	Businesses []Business `json:"businesses"`
+}
+
+// BusinessReviewsResponse is the response payload for Business Reviews API
+type BusinessReviewsResponse struct {
+	Reviews           []Review `json:"reviews"`
+	Total             int      `json:"total"`
+	PossibleLanguages []string `json:"possible_languages"`
 }
 
 type Business struct {
@@ -128,4 +139,20 @@ type SpecialHours struct {
 type Messaging struct {
 	Url         string `json:"url"`
 	UseCaseText string `json:"use_case_text"` // Indicates what kind of messaging can be done with the business, for example "Request a Quote" for a home services business. This text will be localized based on the "locale" input parameter
+}
+
+type Review struct {
+	ID          string `json:"id"`
+	Rating      int    `json:"rating"`
+	User        User   `json:"user"`
+	Text        string `json:"text"`
+	TimeCreated string `json:"time_created"`
+	Url         string `json:"url"`
+}
+
+type User struct {
+	ID         string `json:"id"`
+	ProfileURL string `json:"profile_url"`
+	ImageURL   string `json:"image_url"`
+	Name       string `json:"name"`
 }

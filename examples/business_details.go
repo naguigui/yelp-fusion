@@ -15,10 +15,10 @@ func main() {
 		return
 	}
 
-	katsuyaID := "saijdv-vXJrvsCfvr7SZOw"
+	businessID := "r_BrIgzYcwo1NAuG9dLbpg"
 	canadaLocale := "en_CA"
 
-	res, err := client.BusinessDetails(katsuyaID, canadaLocale)
+	res, err := client.BusinessDetails(businessID, canadaLocale)
 
 	if err != nil {
 		fmt.Printf("Oh noes, error: %v", err)

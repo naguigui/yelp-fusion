@@ -1,3 +1,5 @@
+// Package yelp consists of wrapper functions to interface with the Yelp v3 Fusion API.
+// The package supports business, event, and category endpoints.
 package yelp
 
 import (
@@ -11,23 +13,28 @@ import (
 
 const (
 	baseURI                     = "https://api.yelp.com/v3"
-	businessesEndpoint          = "/businesses/search"
-	businessDetailEndpoint      = "/businesses/"
-	businessSearchPhoneEndpoint = "/businesses/search/phone"
+	businessesEndpoint          = "/businesses"
+	businessesSearchEndpoint    = "/search"
+	businessSearchPhoneEndpoint = "/search/phone"
+	businessReviewsEndpoint     = "/reviews"
 )
 
+// Client is responsible for dispatching requests to the Yelp Fusion API via its methods.
+// An instance is created from Init()
 type Client struct {
 	APIKey     string
 	HTTPClient *http.Client
 	BaseURI    string
 }
 
+// Options is provided as an argument to create an instance of the Client.
+// It provides the Yelp API Key needed to authenticate API requests
 type Options struct {
 	APIKey     string
 	HTTPClient *http.Client
 }
 
-// Init creates a new Yelp client to interface with Yelp API
+// Init creates a new Yelp Client to interface with Yelp API.
 func Init(o *Options) (*Client, error) {
 	if o.APIKey == "" {
 		return nil, errors.New("access token is required but not provided")
@@ -41,7 +48,7 @@ func Init(o *Options) (*Client, error) {
 
 }
 
-// BusinessSearch dispatches a request to the Yelp Business Search API
+// BusinessSearch dispatches a request to the Yelp Business Search API.
 func (c *Client) BusinessSearch(business BusinessSearch) (res *BusinessSearchResponse, err error) {
 	params, err := utility.StructToMap(business)
 
@@ -68,14 +75,14 @@ func (c *Client) BusinessSearch(business BusinessSearch) (res *BusinessSearchRes
 		}
 	}
 
-	err = c.dispatchRequest(businessesEndpoint, filteredParams, &res)
+	err = c.dispatchRequest(fmt.Sprintf("%s%s", businessesEndpoint, businessesSearchEndpoint), filteredParams, &res)
 	if err != nil {
 		return &BusinessSearchResponse{}, err
 	}
 	return res, nil
 }
 
-// BusinessDetails dispatches a request to the Yelp Business Detail API
+// BusinessDetails dispatches a request to the Yelp Business Detail API.
 func (c *Client) BusinessDetails(id string, locale string) (res *BusinessDetailsResponse, err error) {
 	if id == "" {
 		return &BusinessDetailsResponse{}, errors.New("id is required")
@@ -87,17 +94,38 @@ func (c *Client) BusinessDetails(id string, locale string) (res *BusinessDetails
 		params["locale"] = locale
 	}
 
-	err = c.dispatchRequest(fmt.Sprintf("%s%s", businessDetailEndpoint, id), params, &res)
+	err = c.dispatchRequest(fmt.Sprintf("%s/%s", businessesEndpoint, id), params, &res)
 	if err != nil {
 		return &BusinessDetailsResponse{}, err
 	}
 	return res, nil
 }
 
-// BusinessPhoneSearch dispatches a request to the Yelp Phone Search API
+// BusinessPhoneSearch dispatches a request to the Yelp Phone Search API.
 func (c *Client) BusinessPhoneSearch(phoneNumber string, locale string) (res *BusinessPhoneSearchResponse, err error) {
 	if phoneNumber == "" {
 		return &BusinessPhoneSearchResponse{}, errors.New("phone number is required")
+	}
+
+	params := make(map[string]interface{})
+
+	params["phone"] = phoneNumber
+
+	if locale != "" {
+		params["locale"] = locale
+	}
+
+	err = c.dispatchRequest(fmt.Sprintf("%s%s", businessesEndpoint, businessSearchPhoneEndpoint), params, &res)
+	if err != nil {
+		return &BusinessPhoneSearchResponse{}, err
+	}
+	return res, nil
+}
+
+// BusinessReviews dispatches a request to the Yelp Business Reviews API.
+func (c *Client) BusinessReviews(id string, locale string) (res *BusinessReviewsResponse, err error) {
+	if id == "" {
+		return &BusinessReviewsResponse{}, errors.New("business id is required")
 	}
 
 	params := make(map[string]interface{})
@@ -106,14 +134,14 @@ func (c *Client) BusinessPhoneSearch(phoneNumber string, locale string) (res *Bu
 		params["locale"] = locale
 	}
 
-	err = c.dispatchRequest(fmt.Sprintf("%s%s", businessSearchPhoneEndpoint, phoneNumber), params, &res)
+	err = c.dispatchRequest(fmt.Sprintf("%s/%s%s", businessesEndpoint, id, businessReviewsEndpoint), params, &res)
 	if err != nil {
-		return &BusinessPhoneSearchResponse{}, err
+		return &BusinessReviewsResponse{}, err
 	}
 	return res, nil
 }
 
-// dispatchRequest formats request and dispatches it to Yelp API
+// dispatchRequest formats request and dispatches it to Yelp API.
 func (c *Client) dispatchRequest(endpoint string, params map[string]interface{}, payload interface{}) error {
 	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("%s%s", c.BaseURI, endpoint), nil)
 	q := req.URL.Query()

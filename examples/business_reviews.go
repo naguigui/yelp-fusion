@@ -15,13 +15,22 @@ func main() {
 		return
 	}
 
-	phoneNumber := "+14169014724"
+	businessID := "saijdv-vXJrvsCfvr7SZOw"
+	canadaLocale := "en_CA"
 
-	res, err := client.BusinessPhoneSearch(phoneNumber, "")
+	res, err := client.BusinessReviews(businessID, canadaLocale)
+
 	if err != nil {
 		fmt.Printf("Oh noes, error: %v", err)
 		return
 	}
-	fmt.Printf("Total businesses: %v\n", res.Total)
-	fmt.Printf("Businesses: %v\n", res.Businesses)
+
+	for _, v := range res.Reviews {
+		fmt.Println("ID:", v.ID)
+		fmt.Println("Rating:", v.Rating)
+		fmt.Println("Text:", v.Text)
+		fmt.Println("Time Created:", v.TimeCreated)
+		fmt.Println("User:", v.User)
+		fmt.Println("Url:", v.Url)
+	}
 }

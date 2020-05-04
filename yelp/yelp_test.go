@@ -54,8 +54,30 @@ var businessSearchSuccessResponse = `
 }
 `
 
+var businessReviewsSuccessResponse = `
+{
+	"reviews": [
+	  {
+		"id": "review12345",
+		"rating": 5,
+		"user": {
+		  "id": "user12345",
+		  "profile_url": "https://profileurl",
+		  "image_url": "https://myjpg.jpg",
+		  "name": "Andrew Nguyen"
+		},
+		"text": "Omg I love Katsuya, I can eat it everyday",
+		"time_created": "2020-05-04 00:41:13",
+		"url": "https://mockurl.com"
+	  }
+	],
+	"total": 1,
+	"possible_languages": ["en"]
+}
+`
+
 func setup() *yelp.Client {
-	client, _ := yelp.Init("yelp-key", &http.Client{})
+	client, _ := yelp.Init(&yelp.Options{APIKey: "yelp-key"})
 
 	return client
 
@@ -117,4 +139,50 @@ func TestBusinessSearchError(t *testing.T) {
 	_, err := client.BusinessSearch(params)
 
 	assert.EqualError(t, err, "400 Bad Request")
+}
+
+func TestBusinessReviewsSuccess(t *testing.T) {
+	client := setup()
+
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(200)
+		fmt.Fprintln(w, businessReviewsSuccessResponse)
+	}))
+
+	defer ts.Close()
+
+	client.BaseURI = ts.URL
+
+	res, err := client.BusinessReviews("review12345", "")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	assert.Equal(t, res.Total, 1)
+	assert.Equal(t, res.Reviews[0].ID, "review12345")
+	assert.Equal(t, res.Reviews[0].Rating, 5)
+	assert.Equal(t, res.Reviews[0].User.ID, "user12345")
+	assert.Equal(t, res.Reviews[0].User.ProfileURL, "https://profileurl")
+	assert.Equal(t, res.Reviews[0].User.ImageURL, "https://myjpg.jpg")
+	assert.Equal(t, res.Reviews[0].Text, "Omg I love Katsuya, I can eat it everyday")
+	assert.Equal(t, res.Reviews[0].TimeCreated, "2020-05-04 00:41:13")
+	assert.Equal(t, res.Reviews[0].Url, "https://mockurl.com")
+}
+
+func TestBusinessReviewsError(t *testing.T) {
+	client := setup()
+
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(500)
+	}))
+
+	defer ts.Close()
+
+	client.BaseURI = ts.URL
+
+	_, err := client.BusinessReviews("review12345", "")
+
+	assert.EqualError(t, err, "500 Internal Server Error")
 }
