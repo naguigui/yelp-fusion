@@ -119,7 +119,7 @@ For more details on request/response payloads, refer to https://www.yelp.com/dev
 		fmt.Println("Text:", v.Text)
 		fmt.Println("Time Created:", v.TimeCreated)
 		fmt.Println("User:", v.User)
-		fmt.Println("Url:", v.Url)
+		fmt.Println("Url:", v.URL)
 	}
 ```
 

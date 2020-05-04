@@ -57,11 +57,12 @@ type BusinessPhoneSearchResponse struct {
 
 // BusinessReviewsResponse is the response payload for Business Reviews API
 type BusinessReviewsResponse struct {
-	Reviews           []Review `json:"reviews"`
-	Total             int      `json:"total"`
-	PossibleLanguages []string `json:"possible_languages"`
+	Reviews           []Review `json:"reviews"`            // A list of up to three reviews of this business
+	Total             int      `json:"total"`              // The total number of reviews that the business has
+	PossibleLanguages []string `json:"possible_languages"` // A list of languages for which the business has at least one review.
 }
 
+// Business is the full data of a specific business from the Yelp Fusion Business API consisting of its ID, Rating, Price, Phone Number, Opening Hours, and etc.
 type Business struct {
 	ID           string      `json:"id"`                 // Unique Yelp ID of this business
 	Rating       float32     `json:"rating"`             // Rating for this business (value ranges from 1, 1.5, ... 4.5, 5)
@@ -80,20 +81,24 @@ type Business struct {
 	Transactions []string    `json:"transactions"`       // List of Yelp transactions that the business is registered for. Current supported values are pickup, delivery, and restaurant_reservation
 }
 
+// Region is the suggested area in a map to display results in.
 type Region struct {
 	Center Center `json:"center"` // Center position of map area
 }
 
+// Center is the position of map area
 type Center struct {
 	Latitude  float32 `json:"latitude"`  // Latitude position of map bounds center
 	Longitude float32 `json:"longitude"` // Longitude position of map bounds center
 }
 
+// Coordinates is the coordinates of the business, consisting of latitude/longitude
 type Coordinates struct {
 	Latitude  float32 `json:"latitude"`  // Latitude of this business
 	Longitude float32 `json:"longitude"` // Longitude of this business
 }
 
+// Location indicates the geographic area to be used when searching for businesses. Examples: "New York City", "NYC", "350 5th Ave, New York, NY 10118"
 type Location struct {
 	City     string `json:"city"`     // City of this business
 	Country  string `json:"country"`  // ISO 3166-1 alpha-2 country code of this business
@@ -104,17 +109,20 @@ type Location struct {
 	ZipCode  string `json:"zip_code"` // Zip code of this business
 }
 
+// LocationBusinessDetails is the location of this business, including address, city, state, zip code and country
 type LocationBusinessDetails struct {
 	Location
 	DisplayAddress []string `json:"display_address"` // Array of strings that if organized vertically give an address that is in the standard address format for the business's country
 	CrossStreets   string   `json:"cross_streets"`   // Cross streets for this business
 }
 
+// Category defines the alias and title pair associated with the business
 type Category struct {
 	Alias string `json:"alias"` // When searching for business in certain categories, use alias rather than the title
 	Title string `json:"title"` // For display purposes
 }
 
+// Open is the detailed opening hours of each day in a week
 type Open struct {
 	IsOvernight bool   `json:"is_overnight"` // Whether the business opens overnight or not. When this is true, the end time will be lower than the start time
 	Start       string `json:"start"`        // Start of the opening hours in a day, in 24-hour clock notation, like 1000 means 10 AM
@@ -122,12 +130,14 @@ type Open struct {
 	Day         int    `json:"day"`          // From 0 to 6, representing day of the week from Monday to Sunday. Notice that you may get the same day of the week more than once if the business has more than one opening time slots
 }
 
+// Hours is the opening hours of the business
 type Hours struct {
 	Open      []Open `json:"open"`        // The detailed opening hours of each day in a week
 	HoursType string `json:"hours_type"`  // The type of the opening hours information. Right now, this is always REGULAR
 	IsOpenNow bool   `json:"is_open_now"` // Whether the business is currently open or not
 }
 
+// SpecialHours is out of the ordinary hours for the business that apply on certain dates. Whenever these are set, they will override the regular business hours found in the 'hours' field
 type SpecialHours struct {
 	Date        string `json:"date"`         // An ISO8601 date string representing the date for which these special hours apply
 	IsClosed    bool   `json:"is_closed"`    // Whether this particular special hour represents a date where the business is closed
@@ -136,23 +146,26 @@ type SpecialHours struct {
 	IsOvernight bool   `json:"is_overnight"` // Whether the special hours time range spans across midnight or not. When this is true, the end time will be lower than the start time
 }
 
+// Messaging data contains business quote information for this business. This field only appears in the response for businesses that have messaging enabled.
 type Messaging struct {
-	Url         string `json:"url"`
+	URL         string `json:"url"`           // Action Link URL that drops user directly in to the messaging flow for this business.
 	UseCaseText string `json:"use_case_text"` // Indicates what kind of messaging can be done with the business, for example "Request a Quote" for a home services business. This text will be localized based on the "locale" input parameter
 }
 
+// Review data consists of a list of user reviews for a business
 type Review struct {
-	ID          string `json:"id"`
-	Rating      int    `json:"rating"`
-	User        User   `json:"user"`
-	Text        string `json:"text"`
-	TimeCreated string `json:"time_created"`
-	Url         string `json:"url"`
+	ID          string `json:"id"`           // A unique identifier for this review
+	Rating      int    `json:"rating"`       // Rating of this review
+	User        User   `json:"user"`         // The user who wrote the review
+	Text        string `json:"text"`         // Text excerpt of this review
+	TimeCreated string `json:"time_created"` // The time that the review was created in PST
+	URL         string `json:"url"`          // URL of this review
 }
 
+// User data from business reviews
 type User struct {
-	ID         string `json:"id"`
-	ProfileURL string `json:"profile_url"`
-	ImageURL   string `json:"image_url"`
-	Name       string `json:"name"`
+	ID         string `json:"id"`          // ID of the user
+	ProfileURL string `json:"profile_url"` // URL of the user's profile
+	ImageURL   string `json:"image_url"`   // URL of the user's profile photo
+	Name       string `json:"name"`        // User screen name (first name and first initial of last name)
 }

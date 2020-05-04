@@ -167,7 +167,7 @@ func TestBusinessReviewsSuccess(t *testing.T) {
 	assert.Equal(t, res.Reviews[0].User.ImageURL, "https://myjpg.jpg")
 	assert.Equal(t, res.Reviews[0].Text, "Omg I love Katsuya, I can eat it everyday")
 	assert.Equal(t, res.Reviews[0].TimeCreated, "2020-05-04 00:41:13")
-	assert.Equal(t, res.Reviews[0].Url, "https://mockurl.com")
+	assert.Equal(t, res.Reviews[0].URL, "https://mockurl.com")
 }
 
 func TestBusinessReviewsError(t *testing.T) {
