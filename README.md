@@ -31,6 +31,7 @@ Business Endpoints:
 - [Business Search](#business-search)
 - [Business Details](#business-details)
 - [Business Phone Search](#business-phone-search)
+- [Business Reviews](#business-reviews)
 
 <br/>
 
@@ -41,27 +42,27 @@ Business Endpoints:
 For more details on request/response payloads, refer to https://www.yelp.com/developers/documentation/v3/business_search
 
 ```go
-    // Create client using access token from environment variables
-	client, err := yelp.Init(&yelp.Options{APIKey: os.Getenv("YELP_API_KEY")})
+// Create client using access token from environment variables
+client, err := yelp.Init(&yelp.Options{APIKey: os.Getenv("YELP_API_KEY")})
 
-	// Create business search params
-	params := yelp.BusinessSearch{
-		Term:     "restaurants",
-		Location: "220 Yonge St, Toronto, ON",
-		Limit:    10,
-		Radius:   39,
-	}
+// Create business search params
+params := yelp.BusinessSearch{
+	Term:     "restaurants",
+	Location: "220 Yonge St, Toronto, ON",
+	Limit:    10,
+	Radius:   39,
+}
 
-	// Make the request with created params
-	res, err := client.BusinessSearch(params)
+// Make the request with created params
+res, err := client.BusinessSearch(params)
 
-	for _, business := range res.Businesses {
-		fmt.Printf("ID: %v\n", business.ID)
-		fmt.Printf("Name: %v\n", business.Name)
-		fmt.Printf("Location: %v\n", business.Location)
-		fmt.Printf("Phone number: %v\n", business.Phone)
-	}
-  }
+for _, business := range res.Businesses {
+	fmt.Printf("ID: %v\n", business.ID)
+	fmt.Printf("Name: %v\n", business.Name)
+	fmt.Printf("Location: %v\n", business.Location)
+	fmt.Printf("Phone number: %v\n", business.Phone)
+}
+}
 ```
 
 ## Business Details
@@ -69,20 +70,21 @@ For more details on request/response payloads, refer to https://www.yelp.com/dev
 For more details on request/response payloads, refer to https://www.yelp.com/developers/documentation/v3/business
 
 ```go
-	client, err := yelp.Init(&yelp.Options{APIKey: os.Getenv("YELP_API_KEY")})
+// Create client using access token from environment variables
+client, err := yelp.Init(&yelp.Options{APIKey: os.Getenv("YELP_API_KEY")})
 
-	businessId := "saijdv-vXJrvsCfvr7SZOw"
-	canadaLocale := "en_CA"
+businessId := "saijdv-vXJrvsCfvr7SZOw"
+canadaLocale := "en_CA"
 
-	res, err := client.BusinessDetails(businessId, canadaLocale)
+res, err := client.BusinessDetails(businessId, canadaLocale)
 
-	fmt.Printf("ID: %v\n", res.ID)
-	fmt.Printf("Name: %v\n", res.Name)
-	fmt.Printf("City: %v\n", res.Location.City)
-	fmt.Printf("Country: %v\n", res.Location.Country)
-	fmt.Printf("Address: %v\n", res.Location.DisplayAddress)
-	fmt.Printf("Phone number: %v\n", res.Phone)
-	fmt.Printf("Photos: %v", res.Photos)
+fmt.Printf("ID: %v\n", res.ID)
+fmt.Printf("Name: %v\n", res.Name)
+fmt.Printf("City: %v\n", res.Location.City)
+fmt.Printf("Country: %v\n", res.Location.Country)
+fmt.Printf("Address: %v\n", res.Location.DisplayAddress)
+fmt.Printf("Phone number: %v\n", res.Phone)
+fmt.Printf("Photos: %v", res.Photos)
 ```
 
 ## Business Phone Search
@@ -90,15 +92,15 @@ For more details on request/response payloads, refer to https://www.yelp.com/dev
 For more details on request/response payloads, refer to https://www.yelp.ca/developers/documentation/v3/business_search_phone
 
 ```go
-	// Create client using access token from environment variables
-	client, _ := yelp.Init(&yelp.Options{APIKey: os.Getenv("YELP_API_KEY")})
+// Create client using access token from environment variables
+client, _ := yelp.Init(&yelp.Options{APIKey: os.Getenv("YELP_API_KEY")})
 
-	phoneNumber := "+1somephonenumber"
+phoneNumber := "+1somephonenumber"
 
-	res, _ := client.BusinessPhoneSearch(phoneNumber, "")
+res, _ := client.BusinessPhoneSearch(phoneNumber, "")
 
-	fmt.Printf("Total businesses: %v\n", res.Total)
-	fmt.Printf("Businesses: %v\n", res.Businesses)
+fmt.Printf("Total businesses: %v\n", res.Total)
+fmt.Printf("Businesses: %v\n", res.Businesses)
 ```
 
 ## Business Reviews
@@ -106,21 +108,22 @@ For more details on request/response payloads, refer to https://www.yelp.ca/deve
 For more details on request/response payloads, refer to https://www.yelp.com/developers/documentation/v3/business_reviews
 
 ```go
-	client, err := yelp.Init(&yelp.Options{APIKey: os.Getenv("YELP_API_KEY")})
+// Create client using access token from environment variables
+client, err := yelp.Init(&yelp.Options{APIKey: os.Getenv("YELP_API_KEY")})
 
-	businessID := "saijdv-vXJrvsCfvr7SZOw"
-	canadaLocale := "en_CA"
+businessID := "saijdv-vXJrvsCfvr7SZOw"
+canadaLocale := "en_CA"
 
-	res, err := client.BusinessReviews(businessID, canadaLocale)
+res, err := client.BusinessReviews(businessID, canadaLocale)
 
-	for k, v := range res.Reviews {
-		fmt.Println("ID:", v.ID)
-		fmt.Println("Rating:", v.Rating)
-		fmt.Println("Text:", v.Text)
-		fmt.Println("Time Created:", v.TimeCreated)
-		fmt.Println("User:", v.User)
-		fmt.Println("Url:", v.URL)
-	}
+for k, v := range res.Reviews {
+	fmt.Println("ID:", v.ID)
+	fmt.Println("Rating:", v.Rating)
+	fmt.Println("Text:", v.Text)
+	fmt.Println("Time Created:", v.TimeCreated)
+	fmt.Println("User:", v.User)
+	fmt.Println("Url:", v.URL)
+}
 ```
 
 ### License
