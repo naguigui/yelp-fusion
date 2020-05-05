@@ -165,7 +165,7 @@ func (c *Client) TransactionSearch(b BusinessTransactionReq) (res BusinessTransa
 }
 
 // Autocomplete dispatches a request to the Yelp Autocomplete API.
-func (c *Client) Autocomplete(b BusinessAutoCompleteReq) (res BusinessAutocompleteRes, err error) {
+func (c *Client) Autocomplete(b BusinessAutocompleteReq) (res BusinessAutocompleteRes, err error) {
 	params := make(map[string]interface{})
 
 	if b.Text == "" {

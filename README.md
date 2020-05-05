@@ -165,7 +165,7 @@ This returns autocomplete suggestions for search keywords, businesses and catego
 // Create client using access token from environment variables
 client, err := yelp.Init(&yelp.ClientOptions{APIKey: os.Getenv("YELP_API_KEY")})
 
-params := yelp.BusinessAutoCompleteReq{
+params := yelp.BusinessAutocompleteReq{
 	Coordinates: yelp.Coordinates{
 		Latitude:  43.64784,
 		Longitude: -79.38872,

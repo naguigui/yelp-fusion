@@ -15,7 +15,7 @@ func main() {
 		return
 	}
 
-	params := yelp.BusinessAutoCompleteReq{
+	params := yelp.BusinessAutocompleteReq{
 		Coordinates: yelp.Coordinates{
 			Latitude:  43.64784,
 			Longitude: -79.38872,

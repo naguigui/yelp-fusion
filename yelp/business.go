@@ -82,8 +82,8 @@ type BusinessAutocompleteRes struct {
 	Categories []Category             `json:"categories"` // A list of category autocomplete suggestions based on the input text
 }
 
-// BusinessAutoCompleteReq defines the function arguments for AutoComplete
-type BusinessAutoCompleteReq struct {
+// BusinessAutocompleteReq defines the function arguments for AutoComplete
+type BusinessAutocompleteReq struct {
 	Coordinates
 	Text   string // Required. Text to return autocomplete suggestions for
 	Locale string // Optional. Specify the locale to return the autocomplete suggestions in. See the list of supported locales. Defaults to en_US
