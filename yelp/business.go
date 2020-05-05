@@ -75,6 +75,20 @@ type BusinessTransactionRequest struct {
 	Location  string  // Required when latitude and longitude aren't provided. Address of the location you want to deliver to
 }
 
+// BusinessAutocompleteRes is the response payload for Business Autocomplete API
+type BusinessAutocompleteRes struct {
+	Terms      []Term                 `json:"terms"`      // A list of term autocomplete suggestions based on the input text
+	Businesses []AutocompleteBusiness `json:"businesses"` // A list of business autocomplete suggestions based on the input text
+	Categories []Category             `json:"categories"` // A list of category autocomplete suggestions based on the input text
+}
+
+// BusinessAutoCompleteReq defines the function arguments for AutoComplete
+type BusinessAutoCompleteReq struct {
+	Coordinates
+	Text   string // Required. Text to return autocomplete suggestions for
+	Locale string // Optional. Specify the locale to return the autocomplete suggestions in. See the list of supported locales. Defaults to en_US
+}
+
 // Business is the full data of a specific business from the Yelp Fusion Business API consisting of its ID, Rating, Price, Phone Number, Opening Hours, and etc.
 type Business struct {
 	ID           string      `json:"id"`                 // Unique Yelp ID of this business
@@ -181,4 +195,15 @@ type User struct {
 	ProfileURL string `json:"profile_url"` // URL of the user's profile
 	ImageURL   string `json:"image_url"`   // URL of the user's profile photo
 	Name       string `json:"name"`        // User screen name (first name and first initial of last name)
+}
+
+// Term is an autocomplete suggestion based on the input text
+type Term struct {
+	Text string `json:"text"` // The text content of the term autocomplete suggestion
+}
+
+// AutocompleteBusiness represents the business data returned as an autocomplete suggestion
+type AutocompleteBusiness struct {
+	Name string `json:"name"` // Name of the business
+	ID   string `json:"id"`   // Yelp ID of the business
 }

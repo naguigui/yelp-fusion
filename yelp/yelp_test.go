@@ -14,7 +14,7 @@ var (
 	server     *httptest.Server
 )
 
-var businessSearchResponse = `
+const businessSearchResponse = `
 {
   "total": 1,
   "businesses": [
@@ -54,7 +54,7 @@ var businessSearchResponse = `
 }
 `
 
-var businessReviewsResponse = `
+const businessReviewsResponse = `
 {
 	"reviews": [
 	  {
@@ -76,7 +76,7 @@ var businessReviewsResponse = `
 }
 `
 
-var businessTransactionResponse = `
+const businessTransactionResponse = `
 {
 	"total": 144,
 	"businesses": [
@@ -114,6 +114,28 @@ var businessTransactionResponse = `
 	  }
 	]
   }
+`
+
+const autocompleteResponse = `
+{
+	"terms": [
+	  {
+		"text": "Delivery"
+	  }
+	],
+	"businesses": [
+	  {
+		"name": "Delfina",
+		"id": "YqvoyaNvtoC8N5dA8pD2JA"
+	  }
+	],
+	"categories": [
+	  {
+		"alias": "delis",
+		"title": "Delis"
+	  }
+	]
+}
 `
 
 func setup() *yelp.Client {
@@ -282,5 +304,71 @@ func TestBusinessTransactionSearchError(t *testing.T) {
 
 	_, err := client.TransactionSearch(params)
 
+	assert.Error(t, err, "500 Internal Server Error")
+}
+
+func TestAutocompleteSuccess(t *testing.T) {
+	// Arrange
+	client := setup()
+
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(200)
+		fmt.Fprintln(w, autocompleteResponse)
+	}))
+
+	defer ts.Close()
+
+	mockRes := &yelp.BusinessAutocompleteRes{
+		Terms:      []yelp.Term{{Text: "Delivery"}},
+		Categories: []yelp.Category{{Alias: "delis", Title: "Delis"}},
+		Businesses: []yelp.AutocompleteBusiness{{Name: "Delfina", ID: "YqvoyaNvtoC8N5dA8pD2JA"}},
+	}
+
+	client.BaseURI = ts.URL
+
+	params := &yelp.BusinessAutoCompleteReq{
+		Coordinates: yelp.Coordinates{
+			Latitude:  43.64784,
+			Longitude: -79.38872,
+		},
+		Text: "test",
+	}
+
+	// Act
+	res, err := client.Autocomplete(params)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	// Assert
+	assert.Equal(t, res, mockRes)
+}
+
+func TestAutocompleteError(t *testing.T) {
+	// Arrange
+	client := setup()
+
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(500)
+	}))
+
+	defer ts.Close()
+
+	client.BaseURI = ts.URL
+
+	params := &yelp.BusinessAutoCompleteReq{
+		Coordinates: yelp.Coordinates{
+			Latitude:  43.64784,
+			Longitude: -79.38872,
+		},
+		Text: "test",
+	}
+
+	// Act
+	_, err := client.Autocomplete(params)
+
+	// Assert
 	assert.Error(t, err, "500 Internal Server Error")
 }
