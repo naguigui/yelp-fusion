@@ -139,7 +139,7 @@ This only supports "delivery" as a transaction_type as Yelp only supports food d
 client, err := yelp.Init(&yelp.Options{APIKey: os.Getenv("YELP_API_KEY")})
 
 params := &yelp.BusinessTransactionRequest{
-	Location: "	1 Hacker Way East Palo Alto, California",
+	Location: "1 Hacker Way East Palo Alto, California",
 }
 
 res, err := client.TransactionSearch(params)
