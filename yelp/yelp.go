@@ -29,33 +29,33 @@ type Client struct {
 	BaseURI    string
 }
 
-// Options is provided as an argument to create an instance of the Client.
+// ClientOptions is provided as an argument to create an instance of the Client.
 // It provides the Yelp API Key needed to authenticate API requests
-type Options struct {
+type ClientOptions struct {
 	APIKey     string
 	HTTPClient *http.Client
 }
 
 // Init creates a new Yelp Client to interface with Yelp API.
-func Init(o *Options) (*Client, error) {
-	if o.APIKey == "" {
+func Init(c *ClientOptions) (*Client, error) {
+	if c.APIKey == "" {
 		return nil, errors.New("access token is required but not provided")
 	}
 
-	if o.HTTPClient == nil {
-		o.HTTPClient = http.DefaultClient
+	if c.HTTPClient == nil {
+		c.HTTPClient = http.DefaultClient
 	}
 
-	return &Client{APIKey: o.APIKey, BaseURI: baseURI, HTTPClient: o.HTTPClient}, nil
+	return &Client{APIKey: c.APIKey, BaseURI: baseURI, HTTPClient: c.HTTPClient}, nil
 
 }
 
 // BusinessSearch dispatches a request to the Yelp Business Search API.
-func (c *Client) BusinessSearch(business BusinessSearch) (res *BusinessSearchResponse, err error) {
-	params, err := utility.StructToMap(business)
+func (c *Client) BusinessSearch(b BusinessSearchReq) (res BusinessSearchRes, err error) {
+	params, err := utility.StructToMap(b)
 
 	if err != nil {
-		return &BusinessSearchResponse{}, fmt.Errorf("unable to process business params: %v", err)
+		return BusinessSearchRes{}, fmt.Errorf("unable to process business params: %v", err)
 	}
 
 	filteredParams := make(map[string]interface{})
@@ -79,15 +79,15 @@ func (c *Client) BusinessSearch(business BusinessSearch) (res *BusinessSearchRes
 
 	err = c.dispatchRequest(fmt.Sprintf("%s%s", businessesEndpoint, businessesSearchEndpoint), filteredParams, &res)
 	if err != nil {
-		return &BusinessSearchResponse{}, err
+		return BusinessSearchRes{}, err
 	}
 	return res, nil
 }
 
 // BusinessDetails dispatches a request to the Yelp Business Detail API.
-func (c *Client) BusinessDetails(id string, locale string) (res *BusinessDetailsResponse, err error) {
+func (c *Client) BusinessDetails(id string, locale string) (res BusinessDetailsRes, err error) {
 	if id == "" {
-		return &BusinessDetailsResponse{}, errors.New("id is required")
+		return BusinessDetailsRes{}, errors.New("id is required")
 	}
 
 	params := make(map[string]interface{})
@@ -98,15 +98,15 @@ func (c *Client) BusinessDetails(id string, locale string) (res *BusinessDetails
 
 	err = c.dispatchRequest(fmt.Sprintf("%s/%s", businessesEndpoint, id), params, &res)
 	if err != nil {
-		return &BusinessDetailsResponse{}, err
+		return BusinessDetailsRes{}, err
 	}
 	return res, nil
 }
 
 // BusinessPhoneSearch dispatches a request to the Yelp Phone Search API.
-func (c *Client) BusinessPhoneSearch(phoneNumber string, locale string) (res *BusinessPhoneSearchResponse, err error) {
+func (c *Client) BusinessPhoneSearch(phoneNumber string, locale string) (res BusinessPhoneSearchRes, err error) {
 	if phoneNumber == "" {
-		return &BusinessPhoneSearchResponse{}, errors.New("phone number is required")
+		return BusinessPhoneSearchRes{}, errors.New("phone number is required")
 	}
 
 	params := make(map[string]interface{})
@@ -119,15 +119,15 @@ func (c *Client) BusinessPhoneSearch(phoneNumber string, locale string) (res *Bu
 
 	err = c.dispatchRequest(fmt.Sprintf("%s%s", businessesEndpoint, businessSearchPhoneEndpoint), params, &res)
 	if err != nil {
-		return &BusinessPhoneSearchResponse{}, err
+		return BusinessPhoneSearchRes{}, err
 	}
 	return res, nil
 }
 
 // BusinessReviews dispatches a request to the Yelp Business Reviews API.
-func (c *Client) BusinessReviews(id string, locale string) (res *BusinessReviewsResponse, err error) {
+func (c *Client) BusinessReviews(id string, locale string) (res BusinessReviewsRes, err error) {
 	if id == "" {
-		return &BusinessReviewsResponse{}, errors.New("business id is required")
+		return BusinessReviewsRes{}, errors.New("business id is required")
 	}
 
 	params := make(map[string]interface{})
@@ -138,14 +138,14 @@ func (c *Client) BusinessReviews(id string, locale string) (res *BusinessReviews
 
 	err = c.dispatchRequest(fmt.Sprintf("%s/%s%s", businessesEndpoint, id, businessReviewsEndpoint), params, &res)
 	if err != nil {
-		return &BusinessReviewsResponse{}, err
+		return BusinessReviewsRes{}, err
 	}
 	return res, nil
 }
 
 // TransactionSearch dispatches a request to the Yelp Business Transaction Search API.
 // Default value for transaction type is delivery.
-func (c *Client) TransactionSearch(b *BusinessTransactionRequest) (res *BusinessTransactionSearchResponse, err error) {
+func (c *Client) TransactionSearch(b BusinessTransactionReq) (res BusinessTransactionSearchRes, err error) {
 	params := make(map[string]interface{})
 
 	// Use location if specified, otherwise use latitude/longitude
@@ -153,7 +153,7 @@ func (c *Client) TransactionSearch(b *BusinessTransactionRequest) (res *Business
 		params["location"] = b.Location
 	} else {
 		if b.Latitude == 0 || b.Longitude == 0 {
-			return &BusinessTransactionSearchResponse{}, errors.New("latitude and longitude is required if location is not specified")
+			return BusinessTransactionSearchRes{}, errors.New("latitude and longitude is required if location is not specified")
 		}
 		params["latitude"] = b.Latitude
 		params["longitude"] = b.Longitude
@@ -161,26 +161,26 @@ func (c *Client) TransactionSearch(b *BusinessTransactionRequest) (res *Business
 
 	err = c.dispatchRequest(businessTransactionSearchEndpoint, params, &res)
 	if err != nil {
-		return &BusinessTransactionSearchResponse{}, err
+		return BusinessTransactionSearchRes{}, err
 	}
 
 	return res, nil
 }
 
 // Autocomplete dispatches a request to the Yelp Autocomplete API.
-func (c *Client) Autocomplete(b *BusinessAutoCompleteReq) (res *BusinessAutocompleteRes, err error) {
+func (c *Client) Autocomplete(b BusinessAutoCompleteReq) (res BusinessAutocompleteRes, err error) {
 	params := make(map[string]interface{})
 
 	if b.Text == "" {
-		return &BusinessAutocompleteRes{}, errors.New("text is required")
+		return BusinessAutocompleteRes{}, errors.New("text is required")
 	}
 
 	if b.Coordinates.Latitude == 0 {
-		return &BusinessAutocompleteRes{}, errors.New("latitude is required")
+		return BusinessAutocompleteRes{}, errors.New("latitude is required")
 	}
 
 	if b.Coordinates.Longitude == 0 {
-		return &BusinessAutocompleteRes{}, errors.New("longitude is required")
+		return BusinessAutocompleteRes{}, errors.New("longitude is required")
 	}
 
 	params["text"] = b.Text
@@ -193,7 +193,7 @@ func (c *Client) Autocomplete(b *BusinessAutoCompleteReq) (res *BusinessAutocomp
 
 	err = c.dispatchRequest(businessAutocompleteEndpoint, params, &res)
 	if err != nil {
-		return &BusinessAutocompleteRes{}, err
+		return BusinessAutocompleteRes{}, err
 	}
 
 	return res, nil

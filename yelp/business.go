@@ -1,7 +1,7 @@
 package yelp
 
-// BusinessSearch is the request payload for Business search API
-type BusinessSearch struct {
+// BusinessSearchReq is the request payload for Business search API
+type BusinessSearchReq struct {
 	Term       string  `json:"term"`       // Optional. Search term, for example "food" or "restaurants". The term may also be business names, such as "Starbucks". If term is not included the endpoint will default to searching across businesses from a small number of popular categories
 	Location   string  `json:"location"`   // Required if either latitude or longitude is not provided. This string indicates the geographic area to be used when searching for businesses
 	Latitude   float32 `json:"latitude"`   // Required if location is not provided. Latitude of the location you want to search nearby
@@ -18,15 +18,15 @@ type BusinessSearch struct {
 	Attributes string  `json:"attributes"` // Optional. See list of attributes to try out here. https://www.yelp.ca/developers/documentation/v3/business_search
 }
 
-// BusinessSearchResponse is the response payload for Business Search API
-type BusinessSearchResponse struct {
+// BusinessSearchRes is the response payload for Business Search API
+type BusinessSearchRes struct {
 	Region     Region     `json:"region"`     // Suggested area in a map to display results in.
 	Total      int        `json:"total"`      // Total number of business results
 	Businesses []Business `json:"businesses"` // The list of business entries (see Business)
 }
 
-// BusinessDetailsResponse is the response payload for Business Details API
-type BusinessDetailsResponse struct {
+// BusinessDetailsRes is the response payload for Business Details API
+type BusinessDetailsRes struct {
 	ID           string                  `json:"id"`            // Unique Yelp ID of this business
 	Alias        string                  `json:"alias"`         // Alias of a category
 	Name         string                  `json:"name"`          // Name of this business
@@ -49,27 +49,27 @@ type BusinessDetailsResponse struct {
 	Messaging    Messaging               `json:"messaging"`     // Contains Business Messaging / Request a Quote information for this business. This field only appears in the response for businesses that have messaging enabled
 }
 
-// BusinessPhoneSearchResponse is the response payload for Business Phone Search API
-type BusinessPhoneSearchResponse struct {
+// BusinessPhoneSearchRes is the response payload for Business Phone Search API
+type BusinessPhoneSearchRes struct {
 	Total      int        `json:"total"`
 	Businesses []Business `json:"businesses"`
 }
 
-// BusinessReviewsResponse is the response payload for Business Reviews API
-type BusinessReviewsResponse struct {
+// BusinessReviewsRes is the response payload for Business Reviews API
+type BusinessReviewsRes struct {
 	Reviews           []Review `json:"reviews"`            // A list of up to three reviews of this business
 	Total             int      `json:"total"`              // The total number of reviews that the business has
 	PossibleLanguages []string `json:"possible_languages"` // A list of languages for which the business has at least one review.
 }
 
-// BusinessTransactionSearchResponse is the response payload for Business Transaction Search API
-type BusinessTransactionSearchResponse struct {
+// BusinessTransactionSearchRes is the response payload for Business Transaction Search API
+type BusinessTransactionSearchRes struct {
 	Total      int        `json:"total"`
 	Businesses []Business `json:"businesses"`
 }
 
-// BusinessTransactionRequest defines the function arguments for BusinessTransaction
-type BusinessTransactionRequest struct {
+// BusinessTransactionReq defines the function arguments for BusinessTransaction
+type BusinessTransactionReq struct {
 	Latitude  float32 // Required when location isn't provided. Latitude of the location you want to deliver to
 	Longitude float32 // Required when location isn't provided. Longitude of the location you want to deliver to
 	Location  string  // Required when latitude and longitude aren't provided. Address of the location you want to deliver to
