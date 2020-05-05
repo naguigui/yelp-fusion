@@ -131,6 +131,9 @@ for k, v := range res.Reviews {
 
 For more details on request/response payloads, refer to https://www.yelp.ca/developers/documentation/v3/transaction_search
 
+Note: at this time, the API does not return businesses without any reviews and only supports food delivery in the US.
+This only supports "delivery" as a transaction_type as Yelp only supports food delivery.
+
 ```go
 // Create client using access token from environment variables
 client, err := yelp.Init(&yelp.Options{APIKey: os.Getenv("YELP_API_KEY")})
