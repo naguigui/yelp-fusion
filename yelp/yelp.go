@@ -12,11 +12,12 @@ import (
 )
 
 const (
-	baseURI                     = "https://api.yelp.com/v3"
-	businessesEndpoint          = "/businesses"
-	businessesSearchEndpoint    = "/search"
-	businessSearchPhoneEndpoint = "/search/phone"
-	businessReviewsEndpoint     = "/reviews"
+	baseURI                           = "https://api.yelp.com/v3"
+	businessesEndpoint                = "/businesses"
+	businessesSearchEndpoint          = "/search"
+	businessSearchPhoneEndpoint       = "/search/phone"
+	businessReviewsEndpoint           = "/reviews"
+	businessTransactionSearchEndpoint = "/transactions/delivery/search"
 )
 
 // Client is responsible for dispatching requests to the Yelp Fusion API via its methods.
@@ -138,6 +139,30 @@ func (c *Client) BusinessReviews(id string, locale string) (res *BusinessReviews
 	if err != nil {
 		return &BusinessReviewsResponse{}, err
 	}
+	return res, nil
+}
+
+// TransactionSearch dispatches a request to the Yelp Business Transaction Search API.
+// Default value for transaction type is delivery.
+func (c *Client) TransactionSearch(b *BusinessTransactionRequest) (res *BusinessTransactionSearchResponse, err error) {
+	params := make(map[string]interface{})
+
+	// Use location if specified, otherwise use latitude/longitude
+	if b.Location != "" {
+		params["location"] = b.Location
+	} else {
+		if b.Latitude == 0 || b.Longitude == 0 {
+			return &BusinessTransactionSearchResponse{}, errors.New("latitude and longitude is required if location is not specified")
+		}
+		params["latitude"] = b.Latitude
+		params["longitude"] = b.Longitude
+	}
+
+	err = c.dispatchRequest(businessTransactionSearchEndpoint, params, &res)
+	if err != nil {
+		return &BusinessTransactionSearchResponse{}, err
+	}
+
 	return res, nil
 }
 

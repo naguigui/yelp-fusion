@@ -62,6 +62,19 @@ type BusinessReviewsResponse struct {
 	PossibleLanguages []string `json:"possible_languages"` // A list of languages for which the business has at least one review.
 }
 
+// BusinessTransactionSearchResponse is the response payload for Business Transaction Search API
+type BusinessTransactionSearchResponse struct {
+	Total      int        `json:"total"`
+	Businesses []Business `json:"businesses"`
+}
+
+// BusinessTransactionRequest defines the function arguments for BusinessTransaction
+type BusinessTransactionRequest struct {
+	Latitude  float32 // Required when location isn't provided. Latitude of the location you want to deliver to
+	Longitude float32 // Required when location isn't provided. Longitude of the location you want to deliver to
+	Location  string  // Required when latitude and longitude aren't provided. Address of the location you want to deliver to
+}
+
 // Business is the full data of a specific business from the Yelp Fusion Business API consisting of its ID, Rating, Price, Phone Number, Opening Hours, and etc.
 type Business struct {
 	ID           string      `json:"id"`                 // Unique Yelp ID of this business

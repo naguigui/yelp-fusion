@@ -32,6 +32,7 @@ Business Endpoints:
 - [Business Details](#business-details)
 - [Business Phone Search](#business-phone-search)
 - [Business Reviews](#business-reviews)
+- [Business Transaction Search](#business-transaction-search)
 
 <br/>
 
@@ -123,6 +124,30 @@ for k, v := range res.Reviews {
 	fmt.Println("Time Created:", v.TimeCreated)
 	fmt.Println("User:", v.User)
 	fmt.Println("Url:", v.URL)
+}
+```
+
+## Business Transaction Search
+
+For more details on request/response payloads, refer to https://www.yelp.ca/developers/documentation/v3/transaction_search
+
+```go
+// Create client using access token from environment variables
+client, err := yelp.Init(&yelp.Options{APIKey: os.Getenv("YELP_API_KEY")})
+
+params := &yelp.BusinessTransactionRequest{
+	Location: "	1 Hacker Way East Palo Alto, California",
+}
+
+res, err := client.TransactionSearch(params)
+
+fmt.Printf("Total results: %v\n", res.Total)
+
+for _, business := range res.Businesses {
+	fmt.Printf("ID: %v\n", business.ID)
+	fmt.Printf("Name: %v\n", business.Name)
+	fmt.Printf("Location: %v\n", business.Location)
+	fmt.Printf("Phone number: %v\n", business.Phone)
 }
 ```
 

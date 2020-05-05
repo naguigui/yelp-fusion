@@ -14,7 +14,7 @@ var (
 	server     *httptest.Server
 )
 
-var businessSearchSuccessResponse = `
+var businessSearchResponse = `
 {
   "total": 1,
   "businesses": [
@@ -54,7 +54,7 @@ var businessSearchSuccessResponse = `
 }
 `
 
-var businessReviewsSuccessResponse = `
+var businessReviewsResponse = `
 {
 	"reviews": [
 	  {
@@ -76,6 +76,46 @@ var businessReviewsSuccessResponse = `
 }
 `
 
+var businessTransactionResponse = `
+{
+	"total": 144,
+	"businesses": [
+	  {
+		"id": "gR9DTbKCvezQlqvD7_FzPw",
+		"alias": "north-india-restaurant-san-francisco",
+		"price": "$$",
+		"url": "https://www.yelp.com/biz/north-india-restaurant-san-francisco",
+		"rating": 4,
+		"location": {
+		  "zip_code": "94105",
+		  "state": "CA",
+		  "country": "US",
+		  "city": "San Francisco",
+		  "address2": "",
+		  "address3": "",
+		  "address1": "123 Second St"
+		},
+		"categories": [
+		  {
+			"alias": "indpak",
+			"title": "Indian"
+		  }
+		],
+		"phone": "+14153481234",
+		"coordinates": {
+		  "longitude": -122.399305736113,
+		  "latitude": 37.787789124691
+		},
+		"image_url": "http://s3-media4.fl.yelpcdn.com/bphoto/howYvOKNPXU9A5KUahEXLA/o.jpg",
+		"is_closed": false,
+		"name": "North India Restaurant",
+		"review_count": 615,
+		"transactions": ["pickup", "restaurant_reservation"]
+	  }
+	]
+  }
+`
+
 func setup() *yelp.Client {
 	client, _ := yelp.Init(&yelp.Options{APIKey: "yelp-key"})
 
@@ -89,7 +129,7 @@ func TestBusinessSearch(t *testing.T) {
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(200)
-		fmt.Fprintln(w, businessSearchSuccessResponse)
+		fmt.Fprintln(w, businessSearchResponse)
 	}))
 
 	defer ts.Close()
@@ -147,7 +187,7 @@ func TestBusinessReviewsSuccess(t *testing.T) {
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(200)
-		fmt.Fprintln(w, businessReviewsSuccessResponse)
+		fmt.Fprintln(w, businessReviewsResponse)
 	}))
 
 	defer ts.Close()
@@ -185,4 +225,62 @@ func TestBusinessReviewsError(t *testing.T) {
 	_, err := client.BusinessReviews("review12345", "")
 
 	assert.EqualError(t, err, "500 Internal Server Error")
+}
+
+func TestBusinessTransactionSearchSuccess(t *testing.T) {
+	client := setup()
+
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(200)
+		fmt.Fprintln(w, businessTransactionResponse)
+	}))
+
+	defer ts.Close()
+
+	client.BaseURI = ts.URL
+
+	params := &yelp.BusinessTransactionRequest{
+		Latitude:  37.787789124691,
+		Longitude: -122.399305736113,
+	}
+
+	res, err := client.TransactionSearch(params)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	assert.Equal(t, res.Total, 144)
+	assert.Equal(t, res.Businesses[0].ID, "gR9DTbKCvezQlqvD7_FzPw")
+	assert.Equal(t, res.Businesses[0].Phone, "+14153481234")
+	assert.Equal(t, res.Businesses[0].Alias, "north-india-restaurant-san-francisco")
+	assert.Equal(t, res.Businesses[0].Location.Country, "US")
+	assert.Equal(t, res.Businesses[0].Location.City, "San Francisco")
+	assert.Equal(t, res.Businesses[0].Location.Address1, "123 Second St")
+	assert.Equal(t, res.Businesses[0].Categories[0].Alias, "indpak")
+	assert.Equal(t, res.Businesses[0].Categories[0].Title, "Indian")
+	assert.Equal(t, res.Businesses[0].Coordinates.Latitude, float32(37.787789124691))
+	assert.Equal(t, res.Businesses[0].Coordinates.Longitude, float32(-122.399305736113))
+}
+
+func TestBusinessTransactionSearchError(t *testing.T) {
+	client := setup()
+
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(500)
+	}))
+
+	defer ts.Close()
+
+	client.BaseURI = ts.URL
+
+	params := &yelp.BusinessTransactionRequest{
+		Latitude:  37.787789124691,
+		Longitude: -122.399305736113,
+	}
+
+	_, err := client.TransactionSearch(params)
+
+	assert.Error(t, err, "500 Internal Server Error")
 }
