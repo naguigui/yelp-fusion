@@ -3,6 +3,7 @@
 Yelp Fusion API client for Go
 
 [![CircleCI](https://circleci.com/gh/naguigui/yelp-fusion/tree/master.svg?style=svg)](https://circleci.com/gh/naguigui/yelp-fusion/tree/master)
+[![GoDoc](https://godoc.org/github.com/naguigui/yelp-fusion/yelp?status.svg)](https://godoc.org/github.com/naguigui/yelp-fusion/yelp)
 
 Refer to the official Yelp documentation for more information on the API: https://www.yelp.com/developers/documentation/v3 including how to authenticate to use the API.
 
@@ -65,7 +66,6 @@ for _, business := range res.Businesses {
 	fmt.Printf("Name: %v\n", business.Name)
 	fmt.Printf("Location: %v\n", business.Location)
 	fmt.Printf("Phone number: %v\n", business.Phone)
-}
 }
 ```
 

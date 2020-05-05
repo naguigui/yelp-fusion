@@ -19,7 +19,7 @@ func main() {
 	params := yelp.BusinessSearchReq{
 		Term:     "restaurants",
 		Location: "220 Yonge St, Toronto, ON",
-		Limit:    5,
+		Limit:    1,
 		Radius:   3900,
 	}
 
@@ -30,7 +30,6 @@ func main() {
 		fmt.Printf("Oh noes, error: %v\n", err)
 		return
 	}
-
 
 	for _, business := range res.Businesses {
 		fmt.Printf("ID: %v\n", business.ID)
