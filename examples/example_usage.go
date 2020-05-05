@@ -11,8 +11,8 @@ func getReviewsForRestaurant(c *yelp.Client, name string) (*yelp.BusinessReviews
 	params := yelp.BusinessSearchReq{
 		Term:     name,
 		Location: "220 Yonge St, Toronto, ON",
-		Limit:    10,
-		Radius:   39,
+		Limit:    1,
+		Radius:   2000,
 	}
 
 	// Make the request with created params

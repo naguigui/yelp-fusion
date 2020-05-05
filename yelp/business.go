@@ -2,20 +2,20 @@ package yelp
 
 // BusinessSearchReq is the request payload for Business search API
 type BusinessSearchReq struct {
-	Term       string  `json:"term"`       // Optional. Search term, for example "food" or "restaurants". The term may also be business names, such as "Starbucks". If term is not included the endpoint will default to searching across businesses from a small number of popular categories
-	Location   string  `json:"location"`   // Required if either latitude or longitude is not provided. This string indicates the geographic area to be used when searching for businesses
-	Latitude   float32 `json:"latitude"`   // Required if location is not provided. Latitude of the location you want to search nearby
-	Longitude  float32 `json:"longitude"`  // Required if location is not provided. Longitude of the location you want to search nearby
-	Radius     int     `json:"radius"`     // Optional. A suggested search radius in meters. This field is used as a suggestion to the search
-	Categories string  `json:"categories"` // Optional. Categories to filter the search results with
-	Locale     string  `json:"locale"`     // Optional. Specify the locale into which to localize the business information. See the list of supported locales. https://www.yelp.ca/developers/documentation/v3/supported_locales. Defaults to en_US
-	Limit      int     `json:"limit"`      // Optional. Number of business results to return. By default, it will return 20. Maximum is 50
-	Offset     int     `json:"offset"`     // Optional. Offset the list of returned business results by this amount
-	SortBy     string  `json:"sort_by"`    // Optional. Suggestion to the search algorithm that the results be sorted by one of the these modes: best_match, rating, review_count or distance. The default is best_match
-	Price      string  `json:"price"`      // Optional. Pricing levels to filter the search result with: 1 = $, 2 = $$, 3 = $$$, 4 = $$$$. The price filter can be a list of comma delimited pricing levels. For example, "1, 2, 3" will filter the results to show the ones that are $, $$, or $$$
-	OpenNow    bool    `json:"open_now"`   // Optional. Default to false. When set to true, only return the businesses open now
-	OpenAt     int     `json:"open_at"`    // Optional. An integer represending the Unix time in the same timezone of the search location
-	Attributes string  `json:"attributes"` // Optional. See list of attributes to try out here. https://www.yelp.ca/developers/documentation/v3/business_search
+	Term       string  `json:"term,omitempty"`       // Optional. Search term, for example "food" or "restaurants". The term may also be business names, such as "Starbucks". If term is not included the endpoint will default to searching across businesses from a small number of popular categories
+	Location   string  `json:"location,omitempty"`   // Required if either latitude or longitude is not provided. This string indicates the geographic area to be used when searching for businesses
+	Latitude   float32 `json:"latitude,omitempty"`   // Required if location is not provided. Latitude of the location you want to search nearby
+	Longitude  float32 `json:"longitude,omitempty"`  // Required if location is not provided. Longitude of the location you want to search nearby
+	Radius     int     `json:"radius,omitempty"`     // Optional. A suggested search radius in meters. This field is used as a suggestion to the search
+	Categories string  `json:"categories,omitempty"` // Optional. Categories to filter the search results with
+	Locale     string  `json:"locale,omitempty"`     // Optional. Specify the locale into which to localize the business information. See the list of supported locales. https://www.yelp.ca/developers/documentation/v3/supported_locales. Defaults to en_US
+	Limit      int     `json:"limit,omitempty"`      // Optional. Number of business results to return. By default, it will return 20. Maximum is 50
+	Offset     int     `json:"offset,omitempty"`     // Optional. Offset the list of returned business results by this amount
+	SortBy     string  `json:"sort_by,omitempty"`    // Optional. Suggestion to the search algorithm that the results be sorted by one of the these modes: best_match, rating, review_count or distance. The default is best_match
+	Price      string  `json:"price,omitempty"`      // Optional. Pricing levels to filter the search result with: 1 = $, 2 = $$, 3 = $$$, 4 = $$$$. The price filter can be a list of comma delimited pricing levels. For example, "1, 2, 3" will filter the results to show the ones that are $, $$, or $$$
+	OpenNow    bool    `json:"open_now,omitempty"`   // Optional. Default to false. When set to true, only return the businesses open now
+	OpenAt     int     `json:"open_at,omitempty"`    // Optional. An integer represending the Unix time in the same timezone of the search location
+	Attributes string  `json:"attributes,omitempty"` // Optional. See list of attributes to try out here. https://www.yelp.ca/developers/documentation/v3/business_search
 }
 
 // BusinessSearchRes is the response payload for Business Search API

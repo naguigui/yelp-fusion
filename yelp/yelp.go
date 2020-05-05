@@ -58,26 +58,7 @@ func (c *Client) BusinessSearch(b BusinessSearchReq) (res BusinessSearchRes, err
 		return BusinessSearchRes{}, fmt.Errorf("unable to process business params: %v", err)
 	}
 
-	filteredParams := make(map[string]interface{})
-
-	for k, v := range params {
-		switch v := v.(type) {
-		case int:
-			if v != 0 {
-				filteredParams[k] = v
-			}
-		case float32:
-			if v != 0 {
-				filteredParams[k] = v
-			}
-		case string:
-			if v != "" {
-				filteredParams[k] = v
-			}
-		}
-	}
-
-	if err = c.dispatchRequest(fmt.Sprintf("%s%s", BUSINESS_ENDPOINT, BUSINESS_SEARCH_ENDPOINT), filteredParams, &res); err != nil {
+	if err = c.dispatchRequest(fmt.Sprintf("%s%s", BUSINESS_ENDPOINT, BUSINESS_SEARCH_ENDPOINT), params, &res); err != nil {
 		return BusinessSearchRes{}, err
 	}
 
