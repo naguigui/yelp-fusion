@@ -8,14 +8,14 @@ import (
 
 func main() {
 	// Create client using access token from environment variables
-	client, err := yelp.Init(&yelp.Options{APIKey: os.Getenv("YELP_API_KEY")})
+	client, err := yelp.Init(&yelp.ClientOptions{APIKey: os.Getenv("YELP_API_KEY")})
 
 	if err != nil {
 		fmt.Printf("Oh noes, error: %v\n", err)
 		return
 	}
 
-	params := &yelp.BusinessTransactionRequest{
+	params := yelp.BusinessTransactionRequest{
 		Location: "	1 Hacker Way East Palo Alto, California",
 	}
 

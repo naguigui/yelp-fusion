@@ -18,7 +18,7 @@ go get github.com/naguigui/yelp-fusion
 import "github.com/naguigui/yelp-fusion/yelp"
 
 func main() {
-	client, err := yelp.Init(&yelp.Options{APIKey: os.Getenv("YELP_API_KEY")})
+	client, err := yelp.Init(&yelp.ClientOptions{APIKey: os.Getenv("YELP_API_KEY")})
 }
 ```
 
@@ -45,10 +45,10 @@ For more details on request/response payloads, refer to https://www.yelp.com/dev
 
 ```go
 // Create client using access token from environment variables
-client, err := yelp.Init(&yelp.Options{APIKey: os.Getenv("YELP_API_KEY")})
+client, err := yelp.Init(&yelp.ClientOptions{APIKey: os.Getenv("YELP_API_KEY")})
 
 // Create business search params
-params := yelp.BusinessSearch{
+params := yelp.BusinessSearchReq{
 	Term:     "restaurants",
 	Location: "220 Yonge St, Toronto, ON",
 	Limit:    10,
@@ -73,7 +73,7 @@ For more details on request/response payloads, refer to https://www.yelp.com/dev
 
 ```go
 // Create client using access token from environment variables
-client, err := yelp.Init(&yelp.Options{APIKey: os.Getenv("YELP_API_KEY")})
+client, err := yelp.Init(&yelp.ClientOptions{APIKey: os.Getenv("YELP_API_KEY")})
 
 businessId := "saijdv-vXJrvsCfvr7SZOw"
 canadaLocale := "en_CA"
@@ -95,7 +95,7 @@ For more details on request/response payloads, refer to https://www.yelp.ca/deve
 
 ```go
 // Create client using access token from environment variables
-client, _ := yelp.Init(&yelp.Options{APIKey: os.Getenv("YELP_API_KEY")})
+client, _ := yelp.Init(&yelp.ClientOptions{APIKey: os.Getenv("YELP_API_KEY")})
 
 phoneNumber := "+1somephonenumber"
 
@@ -111,7 +111,7 @@ For more details on request/response payloads, refer to https://www.yelp.com/dev
 
 ```go
 // Create client using access token from environment variables
-client, err := yelp.Init(&yelp.Options{APIKey: os.Getenv("YELP_API_KEY")})
+client, err := yelp.Init(&yelp.ClientOptions{APIKey: os.Getenv("YELP_API_KEY")})
 
 businessID := "saijdv-vXJrvsCfvr7SZOw"
 canadaLocale := "en_CA"
@@ -137,9 +137,9 @@ This only supports "delivery" as a transaction_type as Yelp only supports food d
 
 ```go
 // Create client using access token from environment variables
-client, err := yelp.Init(&yelp.Options{APIKey: os.Getenv("YELP_API_KEY")})
+client, err := yelp.Init(&yelp.ClientOptions{APIKey: os.Getenv("YELP_API_KEY")})
 
-params := &yelp.BusinessTransactionRequest{
+params := yelp.BusinessTransactionRequest{
 	Location: "1 Hacker Way East Palo Alto, California",
 }
 
@@ -163,9 +163,9 @@ This returns autocomplete suggestions for search keywords, businesses and catego
 
 ```go
 // Create client using access token from environment variables
-client, err := yelp.Init(&yelp.Options{APIKey: os.Getenv("YELP_API_KEY")})
+client, err := yelp.Init(&yelp.ClientOptions{APIKey: os.Getenv("YELP_API_KEY")})
 
-params := &yelp.BusinessAutoCompleteReq{
+params := yelp.BusinessAutoCompleteReq{
 	Coordinates: yelp.Coordinates{
 		Latitude:  43.64784,
 		Longitude: -79.38872,

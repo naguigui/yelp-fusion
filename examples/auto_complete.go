@@ -8,14 +8,14 @@ import (
 
 func main() {
 	// Create client using access token from environment variables
-	client, err := yelp.Init(&yelp.Options{APIKey: os.Getenv("YELP_API_KEY")})
+	client, err := yelp.Init(&yelp.ClientOptions{APIKey: os.Getenv("YELP_API_KEY")})
 
 	if err != nil {
 		fmt.Printf("Oh noes, error: %v\n", err)
 		return
 	}
 
-	params := &yelp.BusinessAutoCompleteReq{
+	params := yelp.BusinessAutoCompleteReq{
 		Coordinates: yelp.Coordinates{
 			Latitude:  43.64784,
 			Longitude: -79.38872,
