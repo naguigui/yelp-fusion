@@ -6,10 +6,12 @@ Yelp Fusion API client for Go
 
 Refer to the official Yelp documentation for more information on the API: https://www.yelp.com/developers/documentation/v3 including how to authenticate to use the API.
 
+Support for event and category endpoints soon to come.
+
 ## Installation
 
 ```
-go get github.com/naguigui/yelp-fusion
+go get github.com/naguigui/yelp-fusion/yelp
 ```
 
 ## Client Init
