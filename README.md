@@ -33,6 +33,7 @@ Business Endpoints:
 - [Business Phone Search](#business-phone-search)
 - [Business Reviews](#business-reviews)
 - [Business Transaction Search](#business-transaction-search)
+- [Business Autocomplete](#business-autocomplete)
 
 <br/>
 
@@ -152,6 +153,31 @@ for _, business := range res.Businesses {
 	fmt.Printf("Location: %v\n", business.Location)
 	fmt.Printf("Phone number: %v\n", business.Phone)
 }
+```
+
+## Business Autocomplete
+
+For more details on request/response payloads, refer to https://www.yelp.com/developers/documentation/v3/autocomplete
+
+This returns autocomplete suggestions for search keywords, businesses and categories, based on the input text.
+
+```go
+// Create client using access token from environment variables
+client, err := yelp.Init(&yelp.Options{APIKey: os.Getenv("YELP_API_KEY")})
+
+params := &yelp.BusinessAutoCompleteReq{
+	Coordinates: yelp.Coordinates{
+		Latitude:  43.64784,
+		Longitude: -79.38872,
+	},
+	Text: "thai",
+}
+
+res, err := client.Autocomplete(params)
+
+fmt.Printf("Terms: %v\n", res.Terms)
+fmt.Printf("Businesses: %v\n", res.Businesses)
+fmt.Printf("Categories: %v\n", res.Categories)
 ```
 
 ### License

@@ -18,6 +18,7 @@ const (
 	businessSearchPhoneEndpoint       = "/search/phone"
 	businessReviewsEndpoint           = "/reviews"
 	businessTransactionSearchEndpoint = "/transactions/delivery/search"
+	businessAutocompleteEndpoint      = "/autocomplete"
 )
 
 // Client is responsible for dispatching requests to the Yelp Fusion API via its methods.
@@ -161,6 +162,38 @@ func (c *Client) TransactionSearch(b *BusinessTransactionRequest) (res *Business
 	err = c.dispatchRequest(businessTransactionSearchEndpoint, params, &res)
 	if err != nil {
 		return &BusinessTransactionSearchResponse{}, err
+	}
+
+	return res, nil
+}
+
+// Autocomplete dispatches a request to the Yelp Autocomplete API.
+func (c *Client) Autocomplete(b *BusinessAutoCompleteReq) (res *BusinessAutocompleteRes, err error) {
+	params := make(map[string]interface{})
+
+	if b.Text == "" {
+		return &BusinessAutocompleteRes{}, errors.New("text is required")
+	}
+
+	if b.Coordinates.Latitude == 0 {
+		return &BusinessAutocompleteRes{}, errors.New("latitude is required")
+	}
+
+	if b.Coordinates.Longitude == 0 {
+		return &BusinessAutocompleteRes{}, errors.New("longitude is required")
+	}
+
+	params["text"] = b.Text
+	params["latitude"] = b.Coordinates.Latitude
+	params["longitude"] = b.Coordinates.Longitude
+
+	if b.Locale != "" {
+		params["locale"] = b.Locale
+	}
+
+	err = c.dispatchRequest(businessAutocompleteEndpoint, params, &res)
+	if err != nil {
+		return &BusinessAutocompleteRes{}, err
 	}
 
 	return res, nil
