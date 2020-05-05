@@ -404,7 +404,7 @@ func TestAutocompleteSuccess(t *testing.T) {
 
 	client.BaseURI = ts.URL
 
-	params := yelp.BusinessAutoCompleteReq{
+	params := yelp.BusinessAutocompleteReq{
 		Coordinates: yelp.Coordinates{
 			Latitude:  43.64784,
 			Longitude: -79.38872,
@@ -435,7 +435,7 @@ func TestAutocompleteError(t *testing.T) {
 
 	client.BaseURI = ts.URL
 
-	params := yelp.BusinessAutoCompleteReq{
+	params := yelp.BusinessAutocompleteReq{
 		Coordinates: yelp.Coordinates{
 			Latitude:  43.64784,
 			Longitude: -79.38872,

@@ -1,5 +1,5 @@
 // Package yelp consists of wrapper functions to interface with the Yelp v3 Fusion API.
-// The package supports business, event, and category endpoints.
+// The package supports business, and eventually event & category endpoints.
 package yelp
 
 import (
