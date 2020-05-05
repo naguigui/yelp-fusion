@@ -14,7 +14,7 @@ var (
 	server     *httptest.Server
 )
 
-const businessSearchResponse = `
+const BUSINESS_SEARCH_RESPONSE = `
 {
   "total": 1,
   "businesses": [
@@ -54,7 +54,7 @@ const businessSearchResponse = `
 }
 `
 
-const businessReviewsResponse = `
+const BUSINESS_REVIEWS_RESPONSE = `
 {
 	"reviews": [
 	  {
@@ -76,7 +76,7 @@ const businessReviewsResponse = `
 }
 `
 
-const businessTransactionResponse = `
+const BUSINESS_TRANSACTION_RESPONSE = `
 {
 	"total": 144,
 	"businesses": [
@@ -116,7 +116,7 @@ const businessTransactionResponse = `
   }
 `
 
-const autocompleteResponse = `
+const AUTOCOMPLETE_RESPONSE = `
 {
 	"terms": [
 	  {
@@ -151,7 +151,7 @@ func TestBusinessSearch(t *testing.T) {
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(200)
-		fmt.Fprint(w, businessSearchResponse)
+		fmt.Fprint(w, BUSINESS_SEARCH_RESPONSE)
 	}))
 
 	defer ts.Close()
@@ -237,7 +237,7 @@ func TestBusinessReviewsSuccess(t *testing.T) {
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(200)
-		fmt.Fprint(w, businessReviewsResponse)
+		fmt.Fprint(w, BUSINESS_REVIEWS_RESPONSE)
 	}))
 
 	defer ts.Close()
@@ -301,7 +301,7 @@ func TestBusinessTransactionSearchSuccess(t *testing.T) {
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(200)
-		fmt.Fprint(w, businessTransactionResponse)
+		fmt.Fprint(w, BUSINESS_TRANSACTION_RESPONSE)
 	}))
 
 	defer ts.Close()
@@ -391,7 +391,7 @@ func TestAutocompleteSuccess(t *testing.T) {
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(200)
-		fmt.Fprint(w, autocompleteResponse)
+		fmt.Fprint(w, AUTOCOMPLETE_RESPONSE)
 	}))
 
 	defer ts.Close()

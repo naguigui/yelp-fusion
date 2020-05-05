@@ -12,13 +12,13 @@ import (
 )
 
 const (
-	baseURI                           = "https://api.yelp.com/v3"
-	businessesEndpoint                = "/businesses"
-	businessesSearchEndpoint          = "/search"
-	businessSearchPhoneEndpoint       = "/search/phone"
-	businessReviewsEndpoint           = "/reviews"
-	businessTransactionSearchEndpoint = "/transactions/delivery/search"
-	businessAutocompleteEndpoint      = "/autocomplete"
+	BASE_URI                             = "https://api.yelp.com/v3"
+	BUSINESS_ENDPOINT                    = "/businesses"
+	BUSINESS_SEARCH_ENDPOINT             = "/search"
+	BUSINESS_SEARCH_PHONE_ENDPOINT       = "/search/phone"
+	BUSINESS_REVIEWS_ENDPOINT            = "/reviews"
+	BUSINESS_TRANSACTION_SEARCH_ENDPOINT = "/transactions/delivery/search"
+	BUSINESS_AUTOCOMPLETE_ENDPOINT       = "/autocomplete"
 )
 
 // Client is responsible for dispatching requests to the Yelp Fusion API via its methods.
@@ -46,7 +46,7 @@ func Init(c *ClientOptions) (*Client, error) {
 		c.HTTPClient = http.DefaultClient
 	}
 
-	return &Client{APIKey: c.APIKey, BaseURI: baseURI, HTTPClient: c.HTTPClient}, nil
+	return &Client{APIKey: c.APIKey, BaseURI: BASE_URI, HTTPClient: c.HTTPClient}, nil
 
 }
 
@@ -77,10 +77,10 @@ func (c *Client) BusinessSearch(b BusinessSearchReq) (res BusinessSearchRes, err
 		}
 	}
 
-	err = c.dispatchRequest(fmt.Sprintf("%s%s", businessesEndpoint, businessesSearchEndpoint), filteredParams, &res)
-	if err != nil {
+	if err = c.dispatchRequest(fmt.Sprintf("%s%s", BUSINESS_ENDPOINT, BUSINESS_SEARCH_ENDPOINT), filteredParams, &res); err != nil {
 		return BusinessSearchRes{}, err
 	}
+
 	return res, nil
 }
 
@@ -96,8 +96,7 @@ func (c *Client) BusinessDetails(id string, locale string) (res BusinessDetailsR
 		params["locale"] = locale
 	}
 
-	err = c.dispatchRequest(fmt.Sprintf("%s/%s", businessesEndpoint, id), params, &res)
-	if err != nil {
+	if err = c.dispatchRequest(fmt.Sprintf("%s/%s", BUSINESS_ENDPOINT, id), params, &res); err != nil {
 		return BusinessDetailsRes{}, err
 	}
 	return res, nil
@@ -117,10 +116,10 @@ func (c *Client) BusinessPhoneSearch(phoneNumber string, locale string) (res Bus
 		params["locale"] = locale
 	}
 
-	err = c.dispatchRequest(fmt.Sprintf("%s%s", businessesEndpoint, businessSearchPhoneEndpoint), params, &res)
-	if err != nil {
+	if err = c.dispatchRequest(fmt.Sprintf("%s%s", BUSINESS_ENDPOINT, BUSINESS_SEARCH_PHONE_ENDPOINT), params, &res); err != nil {
 		return BusinessPhoneSearchRes{}, err
 	}
+
 	return res, nil
 }
 
@@ -136,8 +135,7 @@ func (c *Client) BusinessReviews(id string, locale string) (res BusinessReviewsR
 		params["locale"] = locale
 	}
 
-	err = c.dispatchRequest(fmt.Sprintf("%s/%s%s", businessesEndpoint, id, businessReviewsEndpoint), params, &res)
-	if err != nil {
+	if err = c.dispatchRequest(fmt.Sprintf("%s/%s%s", BUSINESS_ENDPOINT, id, BUSINESS_REVIEWS_ENDPOINT), params, &res); err != nil {
 		return BusinessReviewsRes{}, err
 	}
 	return res, nil
@@ -159,8 +157,7 @@ func (c *Client) TransactionSearch(b BusinessTransactionReq) (res BusinessTransa
 		params["longitude"] = b.Longitude
 	}
 
-	err = c.dispatchRequest(businessTransactionSearchEndpoint, params, &res)
-	if err != nil {
+	if err = c.dispatchRequest(BUSINESS_TRANSACTION_SEARCH_ENDPOINT, params, &res); err != nil {
 		return BusinessTransactionSearchRes{}, err
 	}
 
@@ -191,8 +188,7 @@ func (c *Client) Autocomplete(b BusinessAutoCompleteReq) (res BusinessAutocomple
 		params["locale"] = b.Locale
 	}
 
-	err = c.dispatchRequest(businessAutocompleteEndpoint, params, &res)
-	if err != nil {
+	if err = c.dispatchRequest(BUSINESS_AUTOCOMPLETE_ENDPOINT, params, &res); err != nil {
 		return BusinessAutocompleteRes{}, err
 	}
 
