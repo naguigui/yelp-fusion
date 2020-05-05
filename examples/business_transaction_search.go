@@ -15,8 +15,8 @@ func main() {
 		return
 	}
 
-	params := yelp.BusinessTransactionRequest{
-		Location: "	1 Hacker Way East Palo Alto, California",
+	params := yelp.BusinessTransactionReq{
+		Location: "1 Hacker Way East Palo Alto, California",
 	}
 
 	res, err := client.TransactionSearch(params)
